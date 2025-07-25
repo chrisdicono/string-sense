@@ -117,6 +117,10 @@ footer {
     margin: 0;
 }
 
+.game-options h3:hover {
+    background-color: #d0d0d0;
+}
+
 .game-container {
     width: 80%;
     margin: 0 auto;
@@ -148,4 +152,45 @@ footer {
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+.profile-picture {
+    width: 150px;
+    height: 150px;
+    border-radius: 20%;
+    margin-top: 20px;
+}
+
+.profile-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.profile-names {
+    display: flex;
+    flex-direction: row;
+    margin-left: 20px;
+}
+
+.profile-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.stats-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.stats-showcase {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-right: 20px;
 }
