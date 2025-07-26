@@ -166,17 +166,31 @@ footer {
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    margin-top: 20px;
+    margin-top: 20px
+}
+
+.profile-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
 
 .profile-names {
     display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-right: 20px;
+}
+
+.profile-header-content {
+    display: flex;
     flex-direction: row;
-    margin-left: 20px;
+    margin-right: 20px;
 }
 
 .profile-details {
     display: flex;
+    margin-left: 20px;
     flex-direction: column;
 }
 
@@ -193,4 +207,25 @@ footer {
     flex-direction: column;
     align-items: center;
     margin-right: 20px;
+}
+
+.edit-profile {
+    padding: 10px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.profile-display-name {
+    font-size: 24px;
+    margin: 0;
+}
+
+.profile-username {
+    font-size: 18px;
+    margin: 0;
+}
+
+.profile-country {
+    font-size: 14px;
+    margin: 15px 0px;
 }
