@@ -2,6 +2,24 @@ html, body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: Poppins, sans-serif;
+    font-size: 16px;
+}
+
+.logo {
+    font-family: 'DynaPuff', cursive;
+    color: #fff;
+    text-decoration: none;
+}
+
+h1 {
+    font-size: 2.75rem;
+}
+
+h2 {
+    font-family: 'Ancizar Serif', serif;
+    font-size: 1.75rem;
+    font-weight: 800;
 }
 
 header {
@@ -22,6 +40,7 @@ nav {
 
 nav li {
     display: inline-block;
+    border-radius: 10px;;
 }
 
 nav li a {
@@ -30,8 +49,9 @@ nav li a {
     width: 100%;
     height: 100%;
     text-decoration: none;
-    padding: 10px 20px;
+    padding: 10px 10px;
     font-size: 16px;
+    font-weight: 500;
 }
 
 nav li:hover {
@@ -53,26 +73,58 @@ main {
 }
 
 .container {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 25px;
+    color: #fff;
+    min-width: 400px;
     max-width: 1200px;
-    margin: 0 auto;
+    width: 50%;
+    height: 0.5rem;
+    margin: auto;
     padding: 200px 20px;
     text-align: center;
 }
 
+.btn-primary {
+    background-color: #85b1da;
+    color: rgb(0, 0, 0);
+    padding: 10px 20px;
+    border: 2px solid #000000;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: 'DynaPuff', cursive;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.btn-primary:hover {
+    background-color: #6a9bc3;
+    color: rgb(255, 255, 255);
+}
+
+.btn-primary:active {
+    background-color: #578bb4;
+    color: rgb(255, 255, 255);
+}
+
 .heading-image {
+    display: flex;
+    text-align: center;
     height: 550px;
-    background-image: url('./guitar.png');
+    background-image: url('../images/guitar.png');
     background-size: cover;
     background-position: center;
 }
 
 .features {
     display: flex;
-    width: 50%;
+    align-items: center;
+    justify-content: center;
+    width: 75%;
     margin: 0 auto;
     margin-top: 110px;
     margin-bottom: 40px;
@@ -80,11 +132,15 @@ main {
 
 .showcase-text {
     padding: 30px;
+    width: 500px;
+    min-width: 300px;
+    max-width: 700px;
 }
 
 .showcase-image {
-    width: 50%;
-    height: 300px;
+    width: auto;
+    height: 250px;
+    object-fit: contain;
     background-image: url('./guitar2.png');
 }
 
@@ -103,34 +159,50 @@ footer {
 }
 
 .game-options {
+    color: rgb(0, 0, 0);
     margin: 0 auto;
-    margin-top: 50px;
-    width: 80%;
+    margin-top: 30px;
+    margin-bottom: 5px;
+    width: 90%;
+    max-width: 1300px;
     display: flex;
-    justify-content: space-between;
-    padding: 10px 20px;
-    background-color: #f0f0f0;
-    border-bottom: 1px solid #ccc;
+    /* justify-content: space-between; */
 }
 
 .game-options h3 {
     margin: 0;
 }
 
-.game-options h3:hover {
-    background-color: #d0d0d0;
+.icon {
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  text-decoration: none;
+  margin-right: 20px;
+}
+
+.icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.icon:hover img {
+    opacity: 0.65;
+    cursor: pointer;
 }
 
 .game-container {
-    width: 80%;
+    width: 90%;
+    aspect-ratio: 16 / 9;
+    max-width: 1300px;
     margin: 0 auto;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 400px;
     background-color: #e0e0e0;
     border: 1px solid #ccc;
-    margin-top: 20px;
 }
 
 .start-game {
