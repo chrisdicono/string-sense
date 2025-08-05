@@ -1,6 +1,7 @@
 html, body {
     margin: 0;
     padding: 0;
+    height: 100%;
     box-sizing: border-box;
     font-family: Poppins, sans-serif;
     font-size: 16px;
@@ -70,6 +71,7 @@ main {
     text-align: center;
     position: relative;
     top: 70px;
+    padding-bottom: 50px;
 }
 
 .container {
@@ -151,6 +153,7 @@ main {
 
 footer {
     background-color: #85b1da;
+    margin-top: 50px;
     color: rgb(0, 0, 0);
     text-align: center;
     padding: 10px;
@@ -358,4 +361,67 @@ footer {
 .profile-country {
     font-size: 14px;
     margin: 15px 0px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    justify-self: center;
+    align-items: flex-start;
+    width: 80%;
+    max-width: 900px;
+    background: rgba(232, 232, 232, 0.5);
+    border-radius: 40px;
+    padding: 2rem 1.6rem;
+    margin: 20px auto;
+}
+
+label {
+    display: flex;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+    width: 95%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+input[type="submit"] {
+    display: flex;
+    align-self: center;
+    background-color: #85b1da;
+    color: rgb(0, 0, 0);
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.forgot-password {
+    background-color: #85b1da;
+    color: rgb(0, 0, 0);
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.google-button {
+    background-color: #db4437;
+    color: #ffffff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.footer-push {
+    flex-grow: 1;
 }
