@@ -5,7 +5,7 @@ html, body {
     box-sizing: border-box;
     font-family: Poppins, sans-serif;
     font-size: 16px;
-    background: linear-gradient(155deg, #ffffff 5%, #393D3F 90%);
+    background: linear-gradient(155deg, #cacaca 5%, #393D3F 85%);
 }
 
 .logo {
@@ -128,10 +128,13 @@ main {
     align-items: center;
     justify-content: center;
     width: 75%;
-    max-width: 900px;
+    max-width: 1000px;
     margin: 0 auto;
     margin-top: 110px;
     margin-bottom: 40px;
+    background-color: #85b1da;
+    padding: 30px 0px;
+    border-radius: 20px;
 }
 
 .showcase-text {
@@ -142,6 +145,7 @@ main {
 }
 
 .showcase-image {
+    margin: 30px;
     width: auto;
     height: 250px;
     border-radius: 20px;
