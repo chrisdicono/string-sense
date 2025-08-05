@@ -1,10 +1,11 @@
 html, body {
     margin: 0;
     padding: 0;
-    height: 100%;
+    min-height: 100vh;
     box-sizing: border-box;
     font-family: Poppins, sans-serif;
     font-size: 16px;
+    background: linear-gradient(155deg, #ffffff 5%, #393D3F 90%);
 }
 
 .logo {
@@ -33,7 +34,7 @@ header {
 
 nav {
     width: 100%;
-    background-color: #85b1da;
+    background-color: #393D3F;
     padding: 0;
     display: flex;
     justify-content: space-between;
@@ -45,7 +46,7 @@ nav li {
 }
 
 nav li a {
-    color: rgb(0, 0, 0);
+    color: rgb(255, 255, 255);
     display: block;
     width: 100%;
     height: 100%;
@@ -56,7 +57,7 @@ nav li a {
 }
 
 nav li:hover {
-    background-color: #6a9bc3;
+    background-color: #5a6063;
 }
 
 ul.nav-left {
@@ -127,6 +128,7 @@ main {
     align-items: center;
     justify-content: center;
     width: 75%;
+    max-width: 900px;
     margin: 0 auto;
     margin-top: 110px;
     margin-bottom: 40px;
@@ -142,6 +144,7 @@ main {
 .showcase-image {
     width: auto;
     height: 250px;
+    border-radius: 20px;
     object-fit: contain;
     background-image: url('./guitar2.png');
 }
@@ -152,7 +155,6 @@ main {
 }
 
 footer {
-    background-color: #85b1da;
     margin-top: 50px;
     color: rgb(0, 0, 0);
     text-align: center;
@@ -201,11 +203,14 @@ footer {
     aspect-ratio: 16 / 9;
     max-width: 1300px;
     margin: 0 auto;
+    margin-top: 10px;
     display: flex;
     justify-content: center;
     align-items: center;
     background-color: #e0e0e0;
     border: 1px solid #ccc;
+    border-radius: 15px;
+    
 }
 
 .start-game {
@@ -245,6 +250,7 @@ footer {
     justify-content: center;
     margin-top: 20px;
     width: 80%;
+    max-width: 900px;
     padding: 20px 15px;
     background-color: rgba(232, 232, 232, 0.5);
     border-radius: 25px;
@@ -284,6 +290,7 @@ footer {
     justify-content: center;
     margin-top: 20px;
     width: 80%;
+    max-width: 900px;
     padding: 20px 15px;
     background-color: rgba(232, 232, 232, 0.5);
     border-radius: 25px;
@@ -304,6 +311,7 @@ footer {
     justify-content: center;
     margin-right: 20px;
     width: 80%;
+    max-width: 900px;
     padding: 20px 15px;
     background-color: rgba(232, 232, 232, 0.5);
     border-radius: 25px;
@@ -318,6 +326,7 @@ footer {
     margin-top: 20px;
     margin-bottom: 20px;
     width: 80%;
+    max-width: 900px;
     padding: 20px 15px;
     background-color: rgba(232, 232, 232, 0.5);
     border-radius: 25px;
@@ -423,5 +432,8 @@ input[type="submit"] {
 }
 
 .footer-push {
-    flex-grow: 1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
