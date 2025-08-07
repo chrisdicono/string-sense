@@ -3,9 +3,10 @@ html, body {
     padding: 0;
     min-height: 100vh;
     box-sizing: border-box;
+    color: #ebebeb;
     font-family: Poppins, sans-serif;
     font-size: 16px;
-    background: linear-gradient(155deg, #cacaca 5%, #393D3F 85%);
+    background: linear-gradient(155deg, #393D3F 5%, #101111 85%);
 }
 
 .logo {
@@ -14,7 +15,7 @@ html, body {
     text-decoration: none;
 }
 
-h1 {
+h1 { 
     font-size: 2.75rem;
 }
 
@@ -46,7 +47,7 @@ nav li {
 }
 
 nav li a {
-    color: rgb(255, 255, 255);
+    color: #ebebeb;
     display: block;
     width: 100%;
     height: 100%;
@@ -93,11 +94,11 @@ main {
 }
 
 .btn-primary {
-    background-color: #85b1da;
+    background: linear-gradient(135deg, #c8efff, #85b1da);
     color: rgb(0, 0, 0);
+    border: none;
     padding: 10px 20px;
-    border: 2px solid #000000;
-    border-radius: 10px;
+    border-radius: 20px;
     cursor: pointer;
     font-family: 'DynaPuff', cursive;
     font-size: 18px;
@@ -105,12 +106,12 @@ main {
 }
 
 .btn-primary:hover {
-    background-color: #6a9bc3;
+    background: linear-gradient(135deg, #a4d8ff, #6a9bc3);
     color: rgb(255, 255, 255);
 }
 
 .btn-primary:active {
-    background-color: #578bb4;
+    background: linear-gradient(135deg, #c8efff, #85b1da);
     color: rgb(255, 255, 255);
 }
 
@@ -129,12 +130,11 @@ main {
     justify-content: center;
     width: 75%;
     max-width: 1000px;
+    min-width: 800px;
     margin: 0 auto;
     margin-top: 110px;
     margin-bottom: 40px;
-    background-color: #85b1da;
     padding: 30px 0px;
-    border-radius: 20px;
 }
 
 .showcase-text {
@@ -160,7 +160,6 @@ main {
 
 footer {
     margin-top: 50px;
-    color: rgb(0, 0, 0);
     text-align: center;
     padding: 10px;
     position: relative;
@@ -188,6 +187,7 @@ footer {
   height: 50px;
   text-decoration: none;
   margin-right: 20px;
+  filter: invert(0.9);
 }
 
 .icon img {
@@ -211,24 +211,29 @@ footer {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #e0e0e0;
-    border: 1px solid #ccc;
+    background-color: #575757;
     border-radius: 15px;
-    
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
 .start-game {
-    padding: 5px 10px;
+    padding: 10px;
     font-size: 20px;
-    font-weight: 700;
-    background-color: #85b1da;
+    font-weight: 600;
+    background: linear-gradient(135deg, #c8efff, #85b1da);
     border: none;
-    border-radius: 5px;
+    border-radius: 15px;
     cursor: pointer;
 }
 
 .start-game:hover {
-    background-color: #6a9bc3;
+    background: linear-gradient(135deg, #a4d8ff, #6a9bc3);
+    color: rgb(255, 255, 255);
+}
+
+.start-game:active {
+    background: linear-gradient(135deg, #c8efff, #85b1da);
+    color: rgb(255, 255, 255);
 }
 
 .leaderboard-container {
@@ -257,6 +262,7 @@ footer {
     max-width: 900px;
     padding: 20px 15px;
     background-color: rgba(232, 232, 232, 0.5);
+    color: rgb(20, 20, 20);
     border-radius: 25px;
 }
 
@@ -356,9 +362,17 @@ footer {
 }
 
 .edit-profile {
-    padding: 10px 10px;
-    border-radius: 5px;
+    color: rgb(20, 20, 20);
+    background: linear-gradient(135deg, #c8efff, #85b1da);
+    padding: 0px 10px;
+    font-weight: 600;
+    border: none;
+    border-radius: 15px;
     cursor: pointer;
+}
+.edit-profile:hover {
+    background: linear-gradient(135deg, #85b1da, #9d77c4);
+    color: rgb(255, 255, 255);
 }
 
 .profile-display-name {
@@ -391,6 +405,7 @@ form {
 
 label {
     display: flex;
+    color: rgb(20, 20, 20);
 }
 
 input[type="text"],
@@ -406,7 +421,7 @@ input[type="password"] {
 input[type="submit"] {
     display: flex;
     align-self: center;
-    background-color: #85b1da;
+    background: linear-gradient(135deg, #c8efff, #85b1da);
     color: rgb(0, 0, 0);
     padding: 10px 20px;
     border: none;
@@ -416,7 +431,7 @@ input[type="submit"] {
 }
 
 .forgot-password {
-    background-color: #85b1da;
+    background: linear-gradient(135deg, #c8efff, #85b1da);
     color: rgb(0, 0, 0);
     padding: 10px 20px;
     border: none;
@@ -426,7 +441,17 @@ input[type="submit"] {
 }
 
 .google-button {
-    background-color: #db4437;
+    background: linear-gradient(135deg, #ff5349, #fc9879);
+    color: #ffffff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.google-button-darker {
+    background: linear-gradient(135deg, #ff362c, #ff7d55);
     color: #ffffff;
     padding: 10px 20px;
     border: none;
@@ -440,4 +465,175 @@ input[type="submit"] {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+}
+
+.stat-card {
+    background: linear-gradient(135deg, #85b1da, #9d77c4);
+    color: white;
+    padding: 1.5rem;
+    margin: 0.5rem 1rem;
+    border-radius: 15px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 1.1rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.graph-card {
+    background: linear-gradient(135deg, #f6d365, #fda085);
+    color: white;
+    padding: 1.5rem 4rem;
+    border-radius: 15px;
+    text-align: center;
+    align-content: center;
+    font-weight: 600;
+    font-size: 1.1rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    height: 15.5rem;
+    transition: transform 0.3s ease;
+}
+.recent-stats {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.activity-container ul {
+    list-style-type: none;
+    padding: 0;
+    width: 90%;
+}
+
+.activity-container li {
+    color: rgb(20, 20, 20);
+    background: linear-gradient(90deg, #f8f9fa, #e9ecef);
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+    border-radius: 15px;
+    border-left: 4px solid #85b1da;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.add-friend {
+    background: linear-gradient(135deg, #c8efff, #85b1da);
+    margin-top: 20px;
+    padding: 5px 10px;
+    font-size: 16px;
+    font-weight: 700;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.add-friend:hover {
+    background: linear-gradient(135deg, #85b1da, #9d77c4);
+    color: white;
+}
+
+.logout {
+    background: linear-gradient(135deg, #FF746C, #FFB199);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    margin-top: 30px;
+    padding: 15px 25px;
+    font-size: 16px;
+    font-weight: 700;
+    color: rgb(0, 0, 0);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.logout:hover {
+    background: linear-gradient(135deg, #FFB199, #FF746C);
+    color: white;
+}
+
+.leaderboard-title {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 2rem;
+}
+
+table {
+    width: 60%;
+    border-collapse: separate;
+    border-spacing: 0 10px;
+    margin-top: 0rem;
+}
+
+thead th {
+    background: linear-gradient(135deg, #85b1da, #9d77c4);
+    color: white;
+    text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+    padding: 10px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 1.1rem;
+    text-align: center;
+}
+
+thead th:first-child {
+    border-radius: 10px 0 0 10px;
+}
+
+thead th:last-child {
+    border-radius: 0 10px 10px 0;
+}
+
+tbody tr {
+    background: linear-gradient(135deg, #f6f9fc, #e0e7ec);
+    color: #333;
+    padding: 10px;
+    font-size: 1rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+tbody tr:hover {
+    background: linear-gradient(135deg, #e0e7ec, #f6f9fc);
+    cursor: pointer;
+}
+
+tbody td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+tbody td:first-child {
+    border-radius: 10px 0 0 10px;
+}
+
+tbody td:last-child {
+    border-radius: 0 10px 10px 0;
+}
+
+.rank {
+    text-align: center;
+    font-weight: 700;
+    font-size: 1.2rem;
+    position: relative;
+}
+
+.rank.gold {
+    color: #f7d200;
+}
+
+.rank.silver {
+    color: #adadad;
+}
+
+.rank.bronze {
+    color: #c2782e;
+}
+
+.table-nav {
+    margin-top: 15px;
+    font-size: 1.1rem;
+    color: #bbb;
+    cursor: pointer;
 }
