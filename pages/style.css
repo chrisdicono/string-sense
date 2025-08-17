@@ -1,3 +1,4 @@
+/* Default/Global Styles */
 html, body {
     margin: 0;
     padding: 0;
@@ -9,12 +10,14 @@ html, body {
     background: linear-gradient(155deg, #393D3F 5%, #101111 85%);
 }
 
+/* Logo Styling */
 .logo {
     font-family: 'DynaPuff', cursive;
     color: #fff;
     text-decoration: none;
 }
 
+/* Heading Styles */
 h1 { 
     font-size: 2.75rem;
 }
@@ -25,6 +28,7 @@ h2 {
     font-weight: 800;
 }
 
+/* Header Styling */
 header {
     position: fixed;
     top: 0;
@@ -33,6 +37,7 @@ header {
     z-index: 1;
 }
 
+/* Navigation Styling */
 nav {
     width: 100%;
     background-color: #393D3F;
@@ -41,9 +46,10 @@ nav {
     justify-content: space-between;
 }
 
+/* Navigation List Items */
 nav li {
     display: inline-block;
-    border-radius: 10px;;
+    border-radius: 10px;
 }
 
 nav li a {
@@ -69,6 +75,7 @@ ul.nav-right {
     padding-right: 20px;
 }
 
+/* Main Content Styling */
 main {
     text-align: center;
     position: relative;
@@ -76,7 +83,8 @@ main {
     padding-bottom: 50px;
 }
 
-.container {
+/* Heading Container Styling */
+.heading-container {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -93,6 +101,16 @@ main {
     text-align: center;
 }
 
+.heading-image {
+    display: flex;
+    text-align: center;
+    height: 550px;
+    background-image: url('../images/guitar.png');
+    background-size: cover;
+    background-position: center;
+}
+
+/* Button Styling */
 .btn-primary {
     background: linear-gradient(135deg, #c8efff, #85b1da);
     color: rgb(0, 0, 0);
@@ -115,15 +133,7 @@ main {
     color: rgb(255, 255, 255);
 }
 
-.heading-image {
-    display: flex;
-    text-align: center;
-    height: 550px;
-    background-image: url('../images/guitar.png');
-    background-size: cover;
-    background-position: center;
-}
-
+/* Showcase Section Styling */
 .features {
     display: flex;
     align-items: center;
@@ -153,11 +163,13 @@ main {
     background-image: url('./guitar2.png');
 }
 
+/* Start Section Styling */
 .start-section {
     text-align: center;
     margin: 50px auto;
 }
 
+/* Footer Styling */
 footer {
     margin-top: 50px;
     text-align: center;
@@ -166,6 +178,7 @@ footer {
     width: 100%;
 }
 
+/* Game Page Styling */
 .game-options {
     color: rgb(0, 0, 0);
     margin: 0 auto;
@@ -236,6 +249,7 @@ footer {
     color: rgb(255, 255, 255);
 }
 
+/* Leaderboard Page Styling */
 .leaderboard-container {
     width: 80%;
     margin: 0 auto;
@@ -244,6 +258,7 @@ footer {
     align-items: center;
 }
 
+/* Profile Page Styling */
 .profile-picture {
     width: 150px;
     height: 150px;
@@ -390,6 +405,7 @@ footer {
     margin: 15px 0px;
 }
 
+/* Login/Signup Form Styling */
 form {
     display: flex;
     flex-direction: column;
@@ -460,6 +476,7 @@ input[type="submit"] {
     font-size: 16px;
 }
 
+/* Extra Footer Styling */
 .footer-push {
     min-height: 100vh;
     display: flex;
@@ -467,6 +484,7 @@ input[type="submit"] {
     justify-content: space-between;
 }
 
+/* Additional Profile styling */
 .stat-card {
     background: linear-gradient(135deg, #85b1da, #9d77c4);
     color: white;
@@ -535,6 +553,7 @@ input[type="submit"] {
     color: white;
 }
 
+/* Logout Button - There is a duplicate, expect small issues! */
 .logout {
     background: linear-gradient(135deg, #FF746C, #FFB199);
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
@@ -553,6 +572,7 @@ input[type="submit"] {
     color: white;
 }
 
+/* Additional Leaderboard styling */
 .leaderboard-title {
     font-family: 'Poppins', sans-serif;
     font-weight: 600;
