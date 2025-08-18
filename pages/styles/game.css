@@ -1,0 +1,78 @@
+/* Game Page Styling */
+.game-options {
+    color: rgb(0, 0, 0);
+    margin: 0 auto;
+    margin-top: 30px;
+    margin-bottom: 5px;
+    width: 90%;
+    max-width: 1300px;
+    display: flex;
+    /* justify-content: space-between; */
+}
+
+.game-options h3 {
+    margin: 0;
+}
+
+.icon {
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  text-decoration: none;
+  margin-right: 20px;
+  filter: invert(0.9);
+}
+
+.icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.icon:hover img {
+    opacity: 0.65;
+    cursor: pointer;
+}
+
+.icon:active img {
+    opacity: 0.90;
+    cursor: pointer;
+}
+
+.game-container {
+    width: min(90%, 80vh * 16/9);
+    height: min(90vw * 9/16, 80vh);
+    max-width: 1300px;
+    margin: 0 auto;
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #a4d8ff;
+}
+
+.start-game {
+    padding: 10px;
+    font-size: 20px;
+    font-weight: 600;
+    background: linear-gradient(135deg, #c8efff, #85b1da);
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+}
+
+.start-game:hover {
+    background: linear-gradient(135deg, #a4d8ff, #6a9bc3);
+    color: rgb(255, 255, 255);
+}
+
+.start-game:active {
+    background: linear-gradient(135deg, #c8efff, #85b1da);
+    color: rgb(255, 255, 255);
+}
+
+canvas {
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}

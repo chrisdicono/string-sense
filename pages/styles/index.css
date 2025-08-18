@@ -1,0 +1,62 @@
+/* Heading Container Styling */
+.heading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 25px;
+    color: #fff;
+    min-width: 400px;
+    max-width: 1200px;
+    width: 50%;
+    height: 0.5rem;
+    margin: auto;
+    padding: 200px 20px;
+    text-align: center;
+}
+
+.heading-image {
+    display: flex;
+    text-align: center;
+    height: 550px;
+    background-image: url('/images/guitar.png');
+    background-size: cover;
+    background-position: center;
+}
+
+/* Showcase Section Styling */
+.features {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 75%;
+    max-width: 1000px;
+    min-width: 800px;
+    margin: 0 auto;
+    margin-top: 110px;
+    margin-bottom: 40px;
+    padding: 30px 0px;
+}
+
+.showcase-text {
+    padding: 30px;
+    width: 500px;
+    min-width: 300px;
+    max-width: 700px;
+}
+
+.showcase-image {
+    margin: 30px;
+    width: auto;
+    height: 250px;
+    border-radius: 20px;
+    object-fit: contain;
+    background-image: url('images/guitar2.png');
+}
+
+/* Start Section Styling */
+.start-section {
+    text-align: center;
+    margin: 50px auto;
+}

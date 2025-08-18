@@ -1,63 +1,55 @@
 <!DOCTYPE html>
 <html>
+    <script type="module" src="../scripts/components.js" defer></script>
     <head>
-        <meta charset="UTF-8">
-        <title>StringSense</title>
-        <link rel="stylesheet" href="./style.css">
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Ancizar+Serif:ital,wght@0,300..900;1,300..900&family=DynaPuff:wght@400..700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="./styles/style.css">
+        <link rel="stylesheet" href="./styles/signup.css">
+        <head-contents></head-contents>
     </head>
     <body>
-        <header>
-            <nav>
-                <ul class="nav-left">
-                    <li><a href="./index.html" class="logo">StringSense</a></li>
-                    <li><a href="./game.html">Play Game</a></li>
-                    <li><a href="./profile.html">Profile</a></li>
-                    <li><a href="./leaderboard.html">Leaderboard</a></li>
-                </ul>
-                <ul class="nav-right">
-                    <li><a href="./signup.html">Log In/Sign Up</a></li>
-                </ul>
-            </nav>
-        </header>
+        <site-header></site-header>
         <main>
             <!-- Log In / Sign Up Form -->
-            <!-- Add selection here -->
-            <h1>Log In</h1>
-            <form action="/action_page.php">
-                <label for="email-user">Username/Email:</label>
-                <input type="text" id="email-user" name="email-user"><br><br>
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password"><br><br>
-                <input type="submit" value="Log In">
-            </form>
-            <br>
-            <button class="google-button">Sign in With Google</button>
-            <br><br>
-            <button class="forgot-password">Forgot Password?</button>
-            <br>
-            <br>
-            <br>
-            <br>
-            <h1>Sign Up</h1>
-            <form action="/action_page.php">
-                <label for="email-user">Display Name:</label>
-                <input type="text" id="fname" name="fname"><br><br>
-                <label for="email-user">Email:</label>
-                <input type="email" id="email-user" name="email-user"><br><br>
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password"><br><br>
-                <label for="password">Confirm Password:</label>
-                <input type="password" id="lname" name="lname"><br><br>
-                <input type="submit" value="Sign Up">
-            </form>
-            <br>
-            <button class="google-button-darker">Sign up With Google</button>
+            <script type="module" src="../scripts/user-auth-tabs.js"></script>
+            <div class="login-signup-tabs">
+                <ul class="tabs">
+                    <li id="login-tab">Log In</li>
+                    <li id="signup-tab">Sign Up</li>
+                </ul>
+            </div>
+            <div id="login-section">
+                <h1>Log In</h1>
+                <form action="#">
+                    <label for="email-user">Username/Email:</label>
+                    <input type="text" id="email-user" name="email-user"><br><br>
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password"><br><br>
+                    <input type="submit" value="Log In">
+                </form>
+                <br>
+                <button class="google-button">Sign in With Google</button>
+                <br><br>
+                <button class="forgot-password">Forgot Password?</button>
+            </div>
+            <div id="signup-section">
+                <h1>Sign Up</h1>
+                <form action="#">
+                    <label for="user">Username:</label>
+                    <input type="text" id="user" name="user"><br><br>
+                    <label for="email-user">Email:</label>
+                    <input type="email" id="email-user" name="email-user"><br><br>
+                    <label for="display">Display Name:</label>
+                    <input type="text" id="display" name="display"><br><br>
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password"><br><br>
+                    <label for="password">Confirm Password:</label>
+                    <input type="password" id="lname" name="lname"><br><br>
+                    <input type="submit" value="Sign Up">
+                </form>
+                <br>
+                <button class="google-button-darker">Sign up With Google</button>
+            </div>
         </main>
-        <footer>
-            <p>&copy; 2025 Christopher DiCono. All rights reserved.</p>
-        </footer>
+        <site-footer></site-footer>
     </body>
 </html>
