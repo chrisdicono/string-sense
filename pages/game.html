@@ -10,15 +10,17 @@
   <body>
     <site-header></site-header>
         <main>
+          <div class="game-interactions">
             <div class="game-options">
                 <a class="icon"><img src="../images/fullscreen-icon.png" alt="Fullscreen"></a>
                 <a class="icon"><img src="../images/settings-icon.png" alt="Settings"></a>
             </div>
             <div class="game-container">
-              <canvas id="gameCanvas"><h3>Your browser does not support this feature.
-                Please switch to another browser if possible.</h3></canvas>
-                <script type="module" src="../scripts/game.js" defer></script>
+              <div id="konva-container"></div>
+              <script type="module" src="../scripts/game-scripts/game.js" defer></script>
+              <script src="https://unpkg.com/konva@9/konva.min.js"></script>
             </div>
+          </div>
         </main>
     </body>
     <site-footer></site-footer>

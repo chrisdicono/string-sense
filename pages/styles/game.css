@@ -4,8 +4,7 @@
     margin: 0 auto;
     margin-top: 30px;
     margin-bottom: 5px;
-    width: 90%;
-    max-width: 1300px;
+    width: 900px;
     display: flex;
     /* justify-content: space-between; */
 }
@@ -41,17 +40,13 @@
 }
 
 .game-container {
-    width: min(90%, calc(100dvh - 200px) * 16/9);
-    height: min(90vw * 9/16, calc(100dvh - 200px));
-    max-width: 1300px;
-    min-width: 500px;
-    min-height: 281.25px;
+    width: 900px;
+    aspect-ratio: 16 / 9;
     margin: 0 auto;
     margin-top: 10px;
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #a4d8ff;
 }
 
 .start-game {
