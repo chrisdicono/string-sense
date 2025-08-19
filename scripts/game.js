@@ -12,11 +12,10 @@ function resizeCanvasToParent() {
 // Canvas resizing
 resizeCanvasToParent();
 window.addEventListener('resize', resizeCanvasToParent);
-// Border radius + other properties
-canvas.style.borderRadius = '15px';
 
 // Game loop
 function gameLoop() {
+    resizeCanvasToParent();
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     // Update and render game objects here
     ctx.fillStyle = 'white';
