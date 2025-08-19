@@ -41,9 +41,11 @@
 }
 
 .game-container {
-    width: min(90%, 80vh * 16/9);
-    height: min(90vw * 9/16, 80vh);
+    width: min(90%, calc(100dvh - 200px) * 16/9);
+    height: min(90vw * 9/16, calc(100dvh - 200px));
     max-width: 1300px;
+    min-width: 500px;
+    min-height: 281.25px;
     margin: 0 auto;
     margin-top: 10px;
     display: flex;
