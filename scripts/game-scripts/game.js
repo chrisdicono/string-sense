@@ -10,7 +10,20 @@ const stage = new Konva.Stage({
     height: gameContainer.clientHeight,
 });
 
-// create Konva layer and add it to the stage
+// create background Konva layer
+const backgroundLayer = new Konva.Layer();
+stage.add(backgroundLayer);
+backgroundLayer.add(new Konva.Rect({
+    x: 0,
+    y: 0,
+    width: stage.width(),
+    height: stage.height(),
+    fillLinearGradientStartPoint: { x: 0, y: 0 },
+    fillLinearGradientEndPoint: { x: stage.width(), y: stage.height() },
+    fillLinearGradientColorStops: [0, '#85b1da', 1, '#d464d8ff'],
+}));
+
+// create layer where interactivity goes
 const layer = new Konva.Layer();
 stage.add(layer);
 
@@ -21,9 +34,11 @@ let gameState = 'menu';
 function gameLoop() {
     // Update game state
     if (gameState === 'menu') {
-        handleMenu(layer, stage);
+        handleMenu(layer, stage, (newState) => {
+            gameState = newState;
+        });
     } else {
-        // different game state
+        // handle other states
     }
 
     // Render the stage
