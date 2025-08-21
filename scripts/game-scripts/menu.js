@@ -146,3 +146,7 @@ function makeMenu(layer, stage, newState) {
 }
 
 export default handleMenu;
+
+// <a href="https://www.flaticon.com/free-icons/music-note" title="music note icons">Music note icons created by Valeria - Flaticon</a>
+// <a href="https://www.flaticon.com/free-icons/music-and-multimedia" title="music and multimedia icons">Music and multimedia icons created by Valeria - Flaticon</a>
+// 
