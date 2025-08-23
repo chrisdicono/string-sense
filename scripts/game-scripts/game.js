@@ -33,7 +33,7 @@ let gameState = 'menu';
 // Game loop
 function gameLoop() {
     // Update game state
-    if (gameState === 'menu') {
+    if (gameState === 'menu') { 
         handleMenu(layer, stage, (newState) => {
             gameState = newState;
         });

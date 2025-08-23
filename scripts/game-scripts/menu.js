@@ -1,4 +1,5 @@
 let titleScreen = true;
+const particles = [];
 
 function handleMenu(layer, stage, newState) {
     // initialize menu only once
@@ -84,8 +85,16 @@ function handleMenu(layer, stage, newState) {
         layer.add(titleText);
         layer.add(welcomeText2);
 
+        // spawn particles initially
+        for (let i = 0; i < 10; i++) {
+            particles.push(createParticle(layer, stage));
+        }
+
         titleScreen = false;
     }
+
+    // handle animated particles
+    handleParticles(layer, stage);
 }
 
 function makeMenu(layer, stage, newState) {
@@ -143,6 +152,110 @@ function makeMenu(layer, stage, newState) {
 
     layer.add(playButton);
     layer.add(optionsButton);
+}
+
+
+function handleParticles(layer, stage) {
+    for (let i = 0; i < particles.length; i++) {
+        if (particles[i].x > stage.width() || particles[i].y > stage.height() || particles[i].x < 0 || particles[i].y < 0) {
+            particles.splice(i, 1);
+            i--;
+            particles.unshift(createParticle(layer, stage));
+        }
+    }
+}
+
+function createParticle(layer, stage) {
+    const imageObj = new Image();
+    imageObj.src = pickRandomNoteImage();
+    const randomParticle = randomPointOutsideBounds(stage);
+    const note = new Konva.Image({
+        x: randomParticle.position[0],
+        y: randomParticle.position[1],
+        image: imageObj,
+        width: 32,
+        height: 32,
+        vx: randomParticle.velocity[0],
+        vy: randomParticle.velocity[1],
+    });
+
+    // add animation
+    const anim = new Konva.Animation((frame) => {
+        const time = frame.time;
+        const timeDiff = frame.timeDiff;
+        const frameRate = frame.frameRate;
+
+        note.x(note.x + note.vx);
+        note.y(note.y + note.vy);
+
+        // remove particle if out of bounds
+        if (note.x < 0 || note.x > stage.width() || note.y < 0 || note.y > stage.height()) {
+            layer.remove(note);
+            anim.stop();
+        }
+    });
+
+    layer.add(note);
+
+    return note;
+}
+
+function pickRandomNoteImage() {
+    const noteImages = [
+        '1-16th.png',
+        '2-8ths.png',
+        '2-16ths.png',
+        '8th.png',
+        '16th-triplet.png',
+        'bass-clef.png',
+        'treble-clef.png',
+        'quarter.png',
+    ];
+    const randomIndex = Math.floor(Math.random() * noteImages.length);
+    return "../images/music-notes/" + noteImages[randomIndex];
+}
+
+function randomPointOutsideBounds(stage) {
+    // offset ratios
+    const offsetX = 0.1;
+    const offsetY = 0.15;
+
+    // calculate with offset to random sides, scale up to stage size
+    const x = (Math.random() < 0.5 ? -offsetX : 1 + offsetX) * stage.width();
+    const y = (Math.random() < 0.5 ? -offsetY : 1 + offsetY) * stage.height();
+
+    // calculate speed of particles
+    const speed = Math.random() * 1 + 0.5; // between 0.5 and 1.5
+
+    // calculate x + y velocities
+    const { velocityX, velocityY } = calculateVelocity(x, y, speed);
+
+    return { 
+        position: { x, y },
+        velocity: { velocityX, velocityY } 
+    };
+}
+
+function calculateVelocity(x, y, speed) {
+    // target point (random)
+    const targetPoint = {
+        x: Math.random() * stage.width() - 100,
+        y: Math.random() * stage.height() - 100,
+    }
+
+    // delta values
+    const dX = targetPoint.x - x;
+    const dY = targetPoint.y - y;
+
+    // normalizing for speed scaling
+    const length = Math.sqrt(dX*dX + dY*dY);
+    dX /= length;
+    dY /= length;
+
+    return {
+        velocityX: dX * speed,
+        velocityY: dY * speed
+    };
 }
 
 export default handleMenu;
