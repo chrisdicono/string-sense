@@ -23,9 +23,15 @@ backgroundLayer.add(new Konva.Rect({
     fillLinearGradientColorStops: [0, '#85b1da', 1, '#d464d8ff'],
 }));
 
-// create layer where interactivity goes
-const layer = new Konva.Layer();
-stage.add(layer);
+// create layer(s) where interactivity goes
+const layer1 = new Konva.Layer({ id: 'game-layer-1' });
+const layer2 = new Konva.Layer({ id: 'game-layer-2' });
+// const layer3 = new Konva.Layer({ id: 'game-layer-3' });
+// const layer4 = new Konva.Layer({ id: 'game-layer-4' });
+stage.add(layer1);
+stage.add(layer2);
+// stage.add(layer3);
+// stage.add(layer4);
 
 // Game variables
 let gameState = 'menu';
@@ -34,7 +40,7 @@ let gameState = 'menu';
 function gameLoop() {
     // Update game state
     if (gameState === 'menu') { 
-        handleMenu(layer, stage, (newState) => {
+        handleMenu(layer2, stage, (newState) => {
             gameState = newState;
         });
     } else {
@@ -42,7 +48,11 @@ function gameLoop() {
     }
 
     // Render the stage
-    layer.draw();
+    backgroundLayer.draw();
+    layer1.draw();
+    layer2.draw();
+    // layer3.draw();
+    // layer4.draw();
     requestAnimationFrame(gameLoop);
 }
 

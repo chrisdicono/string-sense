@@ -1,7 +1,9 @@
 let titleScreen = true;
 const particles = [];
 
-function handleMenu(layer, stage, newState) {
+function handleMenu(primaryLayer, stage, newState) {
+    const particleLayer = stage.findOne('#game-layer-1');
+
     // initialize menu only once
     if (titleScreen) {
         const welcomeText1 = new Konva.Text({
@@ -75,20 +77,20 @@ function handleMenu(layer, stage, newState) {
                     opacity: 0,
                 }).play();
                 setTimeout(() => {
-                    layer.destroyChildren();
-                    makeMenu(layer, stage, newState);
+                    primaryLayer.destroyChildren();
+                    makeMenu(primaryLayer, stage, newState);
                 }, 300);
             }
         });
 
-        layer.add(welcomeText1);
-        layer.add(titleText);
-        layer.add(welcomeText2);
-        layer.draw();
+        primaryLayer.add(welcomeText1);
+        primaryLayer.add(titleText);
+        primaryLayer.add(welcomeText2);
+        primaryLayer.draw();
 
         // spawn particles initially
         for (let i = 0; i < 10; i++) {
-            particles.push(createParticle(layer, stage));
+            particles.push(createParticle(particleLayer, stage));
             // console.log('spawned particle ' + i);
         }
 
@@ -96,7 +98,7 @@ function handleMenu(layer, stage, newState) {
     }
 
     // handle animated particles
-    handleParticles(layer, stage);
+    handleParticles(particleLayer, stage);
     // particles.forEach(p => {
     //     console.log(`Particle at (${p.x().toFixed(2)}, ${p.y().toFixed(2)})`);
     // });
@@ -191,7 +193,7 @@ function createParticle(layer, stage) {
         image: imageObj,
         width: 50,
         height: 50,
-        opacity: 1, // 0.35 when done debugging
+        opacity: 0.35,
         filter: Konva.Filters.Invert,
     });
     imageObj.src = pickRandomNoteImage();
