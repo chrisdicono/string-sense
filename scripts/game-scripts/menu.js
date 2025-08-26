@@ -84,10 +84,12 @@ function handleMenu(layer, stage, newState) {
         layer.add(welcomeText1);
         layer.add(titleText);
         layer.add(welcomeText2);
+        layer.draw();
 
         // spawn particles initially
         for (let i = 0; i < 10; i++) {
             particles.push(createParticle(layer, stage));
+            // console.log('spawned particle ' + i);
         }
 
         titleScreen = false;
@@ -95,6 +97,9 @@ function handleMenu(layer, stage, newState) {
 
     // handle animated particles
     handleParticles(layer, stage);
+    // particles.forEach(p => {
+    //     console.log(`Particle at (${p.x().toFixed(2)}, ${p.y().toFixed(2)})`);
+    // });
 }
 
 function makeMenu(layer, stage, newState) {
@@ -123,7 +128,7 @@ function makeMenu(layer, stage, newState) {
         alignVertical: 'middle',
     });
     optionsButton.offsetX(optionsButton.width() / 2);
-    
+
     playButton.on('mouseover', () => {
         playButton.fill('#fff');
     });
@@ -157,45 +162,57 @@ function makeMenu(layer, stage, newState) {
 
 function handleParticles(layer, stage) {
     for (let i = 0; i < particles.length; i++) {
-        if (particles[i].x > stage.width() || particles[i].y > stage.height() || particles[i].x < 0 || particles[i].y < 0) {
-            particles.splice(i, 1);
+        const note = particles[i];
+        checkHasShown(note, stage);
+
+        // handle popping
+
+        // if a particle was popped or is offscreen, then:
+        const wasReset = resetNote(note, i, layer, stage);
+        if (wasReset) {
             i--;
-            particles.unshift(createParticle(layer, stage));
         }
     }
 }
 
 function createParticle(layer, stage) {
     const imageObj = new Image();
-    imageObj.src = pickRandomNoteImage();
+    imageObj.onload = () => {
+        note.image(imageObj);
+        layer.add(note);
+        layer.draw();
+        note.cache();
+        note.filters([Konva.Filters.Invert]);
+    };
     const randomParticle = randomPointOutsideBounds(stage);
     const note = new Konva.Image({
-        x: randomParticle.position[0],
-        y: randomParticle.position[1],
+        x: randomParticle.position.x,
+        y: randomParticle.position.y,
         image: imageObj,
-        width: 32,
-        height: 32,
-        vx: randomParticle.velocity[0],
-        vy: randomParticle.velocity[1],
+        width: 50,
+        height: 50,
+        opacity: 1, // 0.35 when done debugging
+        filter: Konva.Filters.Invert,
     });
+    imageObj.src = pickRandomNoteImage();
+    note.vx = randomParticle.velocity.velocityX;
+    note.vy = randomParticle.velocity.velocityY;
+    note.hasShown = false;
+    note.isPopped = false;
+    note.spawnX = randomParticle.position.x;
+    note.spawnY = randomParticle.position.y;
 
     // add animation
-    const anim = new Konva.Animation((frame) => {
-        const time = frame.time;
-        const timeDiff = frame.timeDiff;
-        const frameRate = frame.frameRate;
+    const anim = new Konva.Animation(() => {
+        note.x(note.x() + note.vx);
+        note.y(note.y() + note.vy);
+    }, layer);
 
-        note.x(note.x + note.vx);
-        note.y(note.y + note.vy);
-
-        // remove particle if out of bounds
-        if (note.x < 0 || note.x > stage.width() || note.y < 0 || note.y > stage.height()) {
-            layer.remove(note);
-            anim.stop();
-        }
-    });
+    anim.start();
 
     layer.add(note);
+
+    // console.log(`Created particle at (${note.x().toFixed(2)}, ${note.y().toFixed(2)})`);
 
     return note;
 }
@@ -223,12 +240,13 @@ function randomPointOutsideBounds(stage) {
     // calculate with offset to random sides, scale up to stage size
     const x = (Math.random() < 0.5 ? -offsetX : 1 + offsetX) * stage.width();
     const y = (Math.random() < 0.5 ? -offsetY : 1 + offsetY) * stage.height();
+    // console.log(`Creating particle at (${x}, ${y})`);
 
     // calculate speed of particles
-    const speed = Math.random() * 1 + 0.5; // between 0.5 and 1.5
+    const speed = Math.random() / 5 + 0.2; // between 0.2 and 0.4
 
     // calculate x + y velocities
-    const { velocityX, velocityY } = calculateVelocity(x, y, speed);
+    const { velocityX, velocityY } = calculateVelocity(stage, x, y, speed);
 
     return { 
         position: { x, y },
@@ -236,16 +254,16 @@ function randomPointOutsideBounds(stage) {
     };
 }
 
-function calculateVelocity(x, y, speed) {
+function calculateVelocity(stage, x, y, speed) {
     // target point (random)
     const targetPoint = {
-        x: Math.random() * stage.width() - 100,
-        y: Math.random() * stage.height() - 100,
+        x: Math.random() * stage.width() / 2,
+        y: Math.random() * stage.height() / 2,
     }
 
     // delta values
-    const dX = targetPoint.x - x;
-    const dY = targetPoint.y - y;
+    let dX = targetPoint.x - x;
+    let dY = targetPoint.y - y;
 
     // normalizing for speed scaling
     const length = Math.sqrt(dX*dX + dY*dY);
@@ -256,6 +274,40 @@ function calculateVelocity(x, y, speed) {
         velocityX: dX * speed,
         velocityY: dY * speed
     };
+}
+
+function checkHasShown(particle, stage) {
+    if (particle.hasShown) {
+        // Particle has already been shown, no need to do anything
+        return;
+    } else if ((particle.x() > 0 && particle.x() < stage.width()) && (particle.y() > 0 && particle.y() < stage.height())) {
+        // Particle has entered the screen
+        particle.hasShown = true;
+    }
+}
+
+function resetNote(note, noteIndex, layer, stage) {
+    if (handleBounds(note, stage) || note.isPopped) {
+        particles.splice(noteIndex, 1);
+        particles.push(createParticle(layer, stage));
+        note.getLayer().find('Animation').forEach(anim => anim.stop());
+        note.destroy();
+        return true;
+    }
+
+    return false;
+}
+
+function handleBounds(note, stage) {
+    const spawnX = note.spawnX;
+    const spawnY = note.spawnY;
+    if (spawnX < 0 && note.x() > stage.width() || spawnY < 0 && note.y() > stage.height()) {
+        return true;
+    }
+    else if (spawnX > stage.width() && note.x() + note.width() < 0 || spawnY > stage.height() && note.y() + note.height() < 0) {
+        return true;
+    }
+    return false;
 }
 
 export default handleMenu;

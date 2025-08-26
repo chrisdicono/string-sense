@@ -47,6 +47,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
 }
 
 .start-game {
@@ -71,5 +73,4 @@
 
 canvas {
     border-radius: 15px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
 }
