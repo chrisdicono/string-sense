@@ -1,3 +1,7 @@
+// imports
+import Utils from './Utils.js';
+
+// global variables
 let titleScreen = true;
 const particles = [];
 
@@ -198,7 +202,7 @@ function createParticle(layer, stage) {
         opacity: 0.35,
         filter: Konva.Filters.Invert,
     });
-    imageObj.src = pickRandomNoteImage();
+    imageObj.src = Utils.pickRandomNoteImage();
     note.vx = randomParticle.velocity.velocityX;
     note.vy = randomParticle.velocity.velocityY;
     note.hasShown = false;
@@ -212,6 +216,25 @@ function createParticle(layer, stage) {
         note.y(note.y() + note.vy);
     }, layer);
 
+    // on click, explode animation
+    note.on('click', () => {
+        // random note generated
+        const randomNote = Utils.randomNote();
+        Utils.generateNote(randomNote, 500);
+
+        // poof cloud particles
+        noteExplosion(note.x() + note.width() / 2, note.y() + note.height() / 2, layer);
+
+        // fade to zero opacity
+        note.to({
+            opacity: 0,
+            duration: 0.05,
+            onFinish: () => {
+                note.isPopped = true;
+            }
+        });
+    });
+
     anim.start();
 
     layer.add(note);
@@ -219,21 +242,6 @@ function createParticle(layer, stage) {
     // console.log(`Created particle at (${note.x().toFixed(2)}, ${note.y().toFixed(2)})`);
 
     return note;
-}
-
-function pickRandomNoteImage() {
-    const noteImages = [
-        '1-16th.png',
-        '2-8ths.png',
-        '2-16ths.png',
-        '8th.png',
-        '16th-triplet.png',
-        'bass-clef.png',
-        'treble-clef.png',
-        'quarter.png',
-    ];
-    const randomIndex = Math.floor(Math.random() * noteImages.length);
-    return "../images/music-notes/" + noteImages[randomIndex];
 }
 
 function randomPointOutsideBounds(stage) {
@@ -312,6 +320,36 @@ function handleBounds(note, stage) {
         return true;
     }
     return false;
+}
+
+function noteExplosion(x, y, layer) {
+    // create explosion particles
+    const numParticles = 10;
+    const distance = 100;
+    for (let i = 0; i < numParticles; i++) {
+        const randomAngle = Math.random() * 30 - 15 + i * (360 / numParticles);
+        const angleInRadians = randomAngle * (Math.PI / 180);
+        const particle = new Konva.Circle({
+            x: x,
+            y: y,
+            radius: Math.random() * 2 + 3,
+            fill: 'white',
+            opacity: 0.65,
+        });
+
+        particle.to({
+            x: x + Math.cos(angleInRadians) * distance,
+            y: y + Math.sin(angleInRadians) * distance,
+            radius: 0,
+            opacity: 0,
+            duration: 0.75,
+            easing: Konva.Easings.EaseOut,
+            onFinish: () => {
+                    particle.destroy();
+                }
+            });
+        layer.add(particle);
+    }
 }
 
 export default handleMenu;
