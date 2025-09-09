@@ -8,27 +8,9 @@ class Utils {
     /*
     Generates a note from a musical note and duration.
     */
-    static generateNote(note, duration) {
-        const ctx = new (window.AudioContext || window.webkitAudioContext)();
-        // tone generator
-        const oscillator = ctx.createOscillator();
-        oscillator.type = 'sine';
-        oscillator.frequency.setValueAtTime(Utils.noteToFrequency(note), ctx.currentTime);
-
-        // gain node (volume control)
-        const gainNode = ctx.createGain();
-        gainNode.gain.setValueAtTime(0, ctx.currentTime);
-        gainNode.gain.linearRampToValueAtTime(0.3, ctx.currentTime + 0.5); // slow fade in (0.5s)
-        gainNode.gain.linearRampToValueAtTime(0, ctx.currentTime + duration); // slow fade out
-
-        // connect oscillator -> gain node -> speakers
-        oscillator.connect(gainNode);
-        gainNode.connect(ctx.destination);
-
-        oscillator.start();
-        setTimeout(() => {
-            oscillator.stop();
-        }, duration);
+    static pluck(note, duration) {
+        const synth = new Tone.AMSynth().toDestination();
+        synth.triggerAttackRelease(note, "8n");
     }
 
     /*

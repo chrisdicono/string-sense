@@ -39,12 +39,21 @@ let gameState = 'menu';
 // Game loop
 function gameLoop() {
     // Update game state
-    if (gameState === 'menu') { 
-        handleMenu(layer2, stage, (newState) => {
-            gameState = newState;
-        });
-    } else {
-        // handle other states
+    switch (gameState) {
+        case 'menu':
+            handleMenu(layer2, stage, (newState) => {
+                gameState = newState;
+            });
+            break;
+        case 'options':
+            // code
+            break;
+        case 'game':
+            // code
+            break;
+        default:
+            // code
+            break;
     }
 
     // Render the stage

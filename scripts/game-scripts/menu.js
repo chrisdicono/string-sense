@@ -219,8 +219,8 @@ function createParticle(layer, stage) {
     // on click, explode animation
     note.on('click', () => {
         // random note generated
-        const randomNote = Utils.randomNote();
-        Utils.generateNote(randomNote, 500);
+        const randomNote = Utils.randomNoteInRange(2, 5);
+        Utils.pluck(randomNote, 500);
 
         // poof cloud particles
         noteExplosion(note.x() + note.width() / 2, note.y() + note.height() / 2, layer);
