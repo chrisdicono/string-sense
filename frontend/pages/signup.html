@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+    <script type="module" src="../scripts/components.js" defer></script>
+    <head>
+        <link rel="stylesheet" href="./styles/style.css">
+        <link rel="stylesheet" href="./styles/signup.css">
+        <head-contents></head-contents>
+    </head>
+    <body>
+        <site-header></site-header>
+        <main>
+            <!-- Log In / Sign Up Form -->
+            <script type="module" src="../scripts/user-auth-tabs.js"></script>
+            <div class="login-signup-tabs">
+                <ul class="tabs">
+                    <li id="login-tab">Log In</li>
+                    <li id="signup-tab">Sign Up</li>
+                </ul>
+            </div>
+            <div id="login-section">
+                <h1>Log In</h1>
+                <form action="#">
+                    <label for="email-user">Username/Email:</label>
+                    <input type="text" id="email-user" name="email-user"><br><br>
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password"><br><br>
+                    <input type="submit" value="Log In">
+                </form>
+                <br>
+                <button class="google-button">Sign in With Google</button>
+                <br><br>
+                <button class="forgot-password">Forgot Password?</button>
+            </div>
+            <div id="signup-section">
+                <h1>Sign Up</h1>
+                <form action="#">
+                    <label for="user">Username:</label>
+                    <input type="text" id="user" name="user"><br><br>
+                    <label for="email-user">Email:</label>
+                    <input type="email" id="email-user" name="email-user"><br><br>
+                    <label for="display">Display Name:</label>
+                    <input type="text" id="display" name="display"><br><br>
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password"><br><br>
+                    <label for="password">Confirm Password:</label>
+                    <input type="password" id="lname" name="lname"><br><br>
+                    <input type="submit" value="Sign Up">
+                </form>
+                <br>
+                <button class="google-button-darker">Sign up With Google</button>
+            </div>
+        </main>
+        <site-footer></site-footer>
+    </body>
+</html>
