@@ -4,21 +4,7 @@ import Utils from './Utils.js';
 // global variables
 let titleScreen = true;
 const particles = [];
-const pluckSampler = new Tone.Sampler({
-    urls: {
-        E2: 'E2.wav',
-        A2: 'A2.wav',
-        D3: 'D3.wav',
-        G3: 'G3.wav',
-        B3: 'B3.wav',
-        E4: 'E4.wav',
-        A4: 'A4.wav',
-        D5: 'D5.wav',
-        G5: 'G5.wav',
-        B5: 'B5.wav',
-    },
-    baseUrl: '/backend/audio-files/guitar-samples/',
-});
+const pluckSampler = Utils.initiializePluck();
 
 function handleMenu(primaryLayer, stage, newState) {
     const particleLayer = stage.findOne('#game-layer-1');

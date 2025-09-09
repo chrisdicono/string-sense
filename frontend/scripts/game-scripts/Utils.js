@@ -5,6 +5,24 @@ import { freqs440 } from './note-freqs.js';
 Utility functions for the game.
 */
 class Utils {
+    static initiializePluck() {
+        return new Tone.Sampler({
+            urls: {
+                E2: 'E2.wav',
+                A2: 'A2.wav',
+                D3: 'D3.wav',
+                G3: 'G3.wav',
+                B3: 'B3.wav',
+                E4: 'E4.wav',
+                A4: 'A4.wav',
+                D5: 'D5.wav',
+                G5: 'G5.wav',
+                B5: 'B5.wav',
+            },
+            baseUrl: '/backend/audio-files/guitar-samples/',
+        });
+    }
+
     /*
     Generates a note from a musical note and duration.
     */
