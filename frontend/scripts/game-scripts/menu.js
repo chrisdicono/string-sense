@@ -64,7 +64,7 @@ function handleMenu(primaryLayer, stage, newState) {
             }).play();
         });
 
-        window.addEventListener('keydown', (e) => {
+        function handleKeyDown(e) {
             if (e.key === ' ') {
                 new Konva.Tween({
                     node: titleText,
@@ -84,9 +84,13 @@ function handleMenu(primaryLayer, stage, newState) {
                 setTimeout(() => {
                     primaryLayer.destroyChildren();
                     makeMenu(primaryLayer, stage, newState);
+
+                    window.removeEventListener('keydown', handleKeyDown);
                 }, 300);
             }
-        });
+        }
+
+        window.addEventListener('keydown', handleKeyDown);
 
         primaryLayer.add(welcomeText1);
         primaryLayer.add(titleText);
@@ -104,9 +108,6 @@ function handleMenu(primaryLayer, stage, newState) {
 
     // handle animated particles
     handleParticles(particleLayer, stage);
-    // particles.forEach(p => {
-    //     console.log(`Particle at (${p.x().toFixed(2)}, ${p.y().toFixed(2)})`);
-    // });
 }
 
 function makeMenu(layer, stage, newState) {
