@@ -1,10 +1,10 @@
 // imports
-import Utils from './Utils.js';
+import Utils from "./Utils.js";
 
 // global variables
 
 function handleOptions(primaryLayer, stage, newState) {
-    // code
+  // code
 }
 
 export default handleOptions;
