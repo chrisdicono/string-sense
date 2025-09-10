@@ -58,7 +58,8 @@ function gameLoop() {
             });
             break;
         default:
-            // code
+            console.warn(`Unknown gameState: ${gameState}`);
+            gameState = 'menu';
             break;
     }
 

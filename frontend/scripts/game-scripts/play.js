@@ -4,20 +4,24 @@ import { PitchDetector } from "https://esm.sh/pitchy@4";
 
 // global variables
 let initialized = false;
+let testing = false;
 const ctx = new (window.AudioContext || window.webkitAudioContext)();
 const analyser = ctx.createAnalyser();
 
 // audio setup
-const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-const source = ctx.createMediaStreamSource(stream);
-source.connect(analyser);
-analyser.connect(ctx.destination);
+let source;
+let bufferLength;
+let dataArray;
+navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+  source = ctx.createMediaStreamSource(stream);
+  source.connect(analyser);
 
-// record current audio info 
-analyser.fftSize = 2048;
-const bufferLength = analyser.frequencyBinCount;
-const dataArray = new Uint8Array(bufferLength);
-analyser.getByteTimeDomainData(dataArray);
+  // record current audio info 
+  analyser.fftSize = 2048;
+  bufferLength = analyser.frequencyBinCount;
+  dataArray = new Uint8Array(bufferLength);
+  analyser.getByteTimeDomainData(dataArray);
+}).catch(console.error);
 
 function handlePlay(primaryLayer, stage, newState) {
     if (!initialized) {
@@ -50,10 +54,42 @@ function handlePlay(primaryLayer, stage, newState) {
         primaryLayer.add(noteText);
         primaryLayer.draw();
 
+        window.addEventListener('keydown', (keyEvent) => {
+          if (ctx.state === 'suspended') {
+            ctx.resume();
+          }
+          if (keyEvent.key == 't') {
+            toggleTestMic();
+          }
+        });
+
         initialized = true;
     }
 
     //drawWaveform(primaryLayer);
+}
+
+function toggleTestMic() {
+  try {
+    switch (testing) {
+      case false:
+        analyser.connect(ctx.destination);
+        testing = true;
+        alert('testing');
+        break;
+      case true:
+        analyser.disconnect(ctx.destination);
+        testing = false;
+        alert('not testing');
+        break;
+      default:
+        alert('hello');
+        console.warn(`Unexpected state for bool 'testing', ${testing}`);
+        break;
+    }
+  } catch (e) {
+    console.error('Error in toggleTestMic:', e)
+  }
 }
 
 function drawWaveform(layer) {
