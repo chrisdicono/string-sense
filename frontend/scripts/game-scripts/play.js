@@ -5,8 +5,13 @@ import { PitchDetector } from "https://esm.sh/pitchy@4";
 // global variables
 let initialized = false;
 let testing = false;
+let waveform;
 const ctx = new (window.AudioContext || window.webkitAudioContext)();
 const analyser = ctx.createAnalyser();
+const BOX_WIDTH = 500;
+const BOX_HEIGHT = 100;
+const WAVE_START = 205;
+const WAVE_END = 695;
 
 // audio setup
 let source;
@@ -30,7 +35,7 @@ function handlePlay(primaryLayer, stage, newState) {
   if (!initialized) {
     const promptText = new Konva.Text({
       x: stage.width() / 2,
-      y: stage.height() / 2 - 75,
+      y: stage.height() / 2 - 95,
       text: "Play any note.",
       fontSize: 30,
       fontFamily: "Space Mono",
@@ -41,8 +46,8 @@ function handlePlay(primaryLayer, stage, newState) {
 
     const noteText = new Konva.Text({
       x: stage.width() / 2,
-      y: stage.height() / 2 - 40,
-      text: "...",
+      y: stage.height() / 2 - 60,
+      text: "-",
       fontSize: 70,
       fontFamily: "DynaPuff",
       fill: "#ddd",
@@ -53,8 +58,26 @@ function handlePlay(primaryLayer, stage, newState) {
     });
     noteText.offsetX(noteText.width() / 2);
 
+    const waveBg = new Konva.Rect({
+      x: stage.width() / 2,
+      y: stage.height() / 2 + 25,
+      width: BOX_WIDTH,
+      height: BOX_HEIGHT,
+      fill: "#dddddd5a",
+      cornerRadius: 20,
+    });
+    waveBg.offsetX(waveBg.width() / 2);
+
+    waveform = new Konva.Line({
+      points: [WAVE_START, 330, WAVE_END, 330],
+      stroke: "#8b8b8bff",
+      strokeWidth: 2,
+    });
+
     primaryLayer.add(promptText);
     primaryLayer.add(noteText);
+    primaryLayer.add(waveBg);
+    primaryLayer.add(waveform);
     primaryLayer.draw();
 
     window.addEventListener("keydown", (keyEvent) => {
@@ -69,7 +92,7 @@ function handlePlay(primaryLayer, stage, newState) {
     initialized = true;
   }
 
-  //drawWaveform(primaryLayer);
+  drawWaveform(primaryLayer, stage);
 }
 
 function toggleTestMic() {
@@ -95,48 +118,35 @@ function toggleTestMic() {
   }
 }
 
-function drawWaveform(layer) {
-  const WIDTH = 500;
-  const HEIGHT = 200;
-  const drawVisual = requestAnimationFrame(drawWaveform);
+// TODO audio seems a little choppy when testing
+// Waveform too, but waveform looks fine otherwise.
+function drawWaveform(layer, stage) {
   analyser.getByteTimeDomainData(dataArray);
-  // Fill solid color
-  // layer.fillStyle = "rgb(200 200 200)";
-  // layer.fillRect(0, 0, WIDTH, HEIGHT);'
-  const bg = new Konva.Rect({
-    x: stage.width() / 2,
-    y: stage.height() / 2 + 60,
-    width: WIDTH,
-    height: HEIGHT,
-    fill: "grey",
-    shadowBlur: 5,
-    cornerRadius: 10,
-  });
-  layer.add(bg);
-
-  // Begin the path
-  layer.lineWidth = 2;
-  layer.strokeStyle = "rgb(0 0 0)";
-  layer.beginPath();
-  // Draw each point in the waveform
-  const sliceWidth = WIDTH / bufferLength;
-  let x = 0;
+  // plot each point in the waveform
+  const sliceWidth = BOX_WIDTH / bufferLength;
+  let x = WAVE_START;
+  let wavePoints = [];
   for (let i = 0; i < bufferLength; i++) {
-    const v = dataArray[i] / 128.0;
-    const y = v * (HEIGHT / 2);
-
-    if (i === 0) {
-      layer.moveTo(x, y);
-    } else {
-      layer.lineTo(x, y);
+    if (x >= WAVE_END) {
+      break;
     }
+    const v = dataArray[i] / 128.0;
+    const y = v * (BOX_HEIGHT / 2) + 280;
+    // console.log("----- point -----");
+    // console.log(dataArray[i]);
+    // console.log(v);
+    // console.log(y);
+    // console.log(x);
+
+    wavePoints.push(x);
+    wavePoints.push(y);
 
     x += sliceWidth;
   }
+  waveform.points(wavePoints);
 
-  // Finish the line
-  layer.lineTo(WIDTH, HEIGHT / 2);
-  layer.stroke();
+  // redraw afterwards
+  layer.draw();
 }
 
 export default handlePlay;
