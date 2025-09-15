@@ -6,8 +6,11 @@ import { PitchDetector } from "https://esm.sh/pitchy@4";
 let initialized = false;
 let testing = false;
 let waveform;
+let noteText;
+let detector;
 const ctx = new (window.AudioContext || window.webkitAudioContext)();
 const analyser = ctx.createAnalyser();
+const SAMPLE_RATE = 2048;
 const BOX_WIDTH = 500;
 const BOX_HEIGHT = 100;
 const WAVE_START = 205;
@@ -24,13 +27,17 @@ navigator.mediaDevices
     source.connect(analyser);
 
     // record current audio info
-    analyser.fftSize = 2048;
-    bufferLength = analyser.frequencyBinCount;
-    dataArray = new Uint8Array(bufferLength);
-    analyser.getByteTimeDomainData(dataArray);
+    analyser.fftSize = SAMPLE_RATE;
+    bufferLength = analyser.fftSize;
+    dataArray = new Float32Array(bufferLength);
+    analyser.getFloatTimeDomainData(dataArray);
+
+    detector = PitchDetector.forFloat32Array(analyser.fftSize);
+    detector.minVolumeDecibels = -20;
   })
   .catch(console.error);
 
+// FIXME: handle audio context unpause with user interaction
 function handlePlay(primaryLayer, stage, newState) {
   if (!initialized) {
     const promptText = new Konva.Text({
@@ -44,7 +51,7 @@ function handlePlay(primaryLayer, stage, newState) {
     });
     promptText.offsetX(promptText.width() / 2);
 
-    const noteText = new Konva.Text({
+    noteText = new Konva.Text({
       x: stage.width() / 2,
       y: stage.height() / 2 - 60,
       text: "-",
@@ -121,7 +128,7 @@ function toggleTestMic() {
 // TODO audio seems a little choppy when testing
 // Waveform too, but waveform looks fine otherwise.
 function drawWaveform(layer, stage) {
-  analyser.getByteTimeDomainData(dataArray);
+  analyser.getFloatTimeDomainData(dataArray);
   // plot each point in the waveform
   const sliceWidth = BOX_WIDTH / bufferLength;
   let x = WAVE_START;
@@ -130,8 +137,8 @@ function drawWaveform(layer, stage) {
     if (x >= WAVE_END) {
       break;
     }
-    const v = dataArray[i] / 128.0;
-    const y = v * (BOX_HEIGHT / 2) + 280;
+    const v = dataArray[i];
+    const y = BOX_HEIGHT / 2 + 280 + (v * BOX_HEIGHT) / 2;
     // console.log("----- point -----");
     // console.log(dataArray[i]);
     // console.log(v);
@@ -147,6 +154,27 @@ function drawWaveform(layer, stage) {
 
   // redraw afterwards
   layer.draw();
+  updatePitch(detector, dataArray);
+}
+
+function updatePitch(detector, input) {
+  try {
+    if (!detector || !input) return;
+
+    const [pitch, clarity] = detector.findPitch(input, ctx.sampleRate);
+
+    if (noteText) {
+      noteText.text(Math.round(pitch * 10) / 10);
+      noteText.offsetX(noteText.width() / 2);
+    }
+  } catch (error) {
+    console.error("Error in updatePitch:", error);
+  }
+
+  // window.setTimeout(
+  //   () => updatePitch(analyserNode, detector, input, sampleRate),
+  //   100
+  // );
 }
 
 export default handlePlay;
