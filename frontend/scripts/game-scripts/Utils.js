@@ -5,6 +5,33 @@ import { freqs440 } from "./note-freqs.js";
 Utility functions for the game.
 */
 class Utils {
+  /*
+    Calculates the amount of cents off a note is from a target pitch.
+    */
+  static calculateCentsOff(frequency) {
+    const targetFrequency = freqs440.get(roundNearestNote(frequency));
+    return 1200 * log2(frequency / targetFrequency);
+  }
+
+  /*
+    Rounds a given frequency to the nearest note within the Western 12-tone system.
+    */
+  static roundNearestNote(frequency) {
+    let smallestDiff = Infinity;
+    let closestKey;
+    for (let [key, value] of freqs440.entries()) {
+      const tempDiff = Math.abs(frequency - value);
+      if (tempDiff < smallestDiff) {
+        smallestDiff = tempDiff;
+        closestKey = key;
+      }
+    }
+    return closestKey;
+  }
+
+  /*
+    Initializes a plucked guitar synth using Tone.js.
+    */
   static initiializePluck() {
     return new Tone.Sampler({
       urls: {
