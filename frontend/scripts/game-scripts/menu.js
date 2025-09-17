@@ -52,6 +52,7 @@ function handleMenu(primaryLayer, stage, newState) {
         node: titleText,
         duration: 0.1,
         rotation: 2 * negOrPos,
+        easing: Konva.Easings.EaseOut,
       }).play();
       negOrPos *= -1;
     });
@@ -61,6 +62,7 @@ function handleMenu(primaryLayer, stage, newState) {
         node: titleText,
         duration: 0.1,
         rotation: 0,
+        easing: Konva.Easings.EaseOut,
       }).play();
     });
 
