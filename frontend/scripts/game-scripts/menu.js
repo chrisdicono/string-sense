@@ -3,7 +3,7 @@ import Utils from "./Utils.js";
 
 // global variables
 let titleScreen = true;
-const particles = [];
+let particles = [];
 const pluckSampler = Utils.initiializePluck();
 
 function handleMenu(primaryLayer, stage, newState) {
@@ -158,6 +158,7 @@ function makeMenu(layer, stage, newState) {
   playButton.on("click", () => {
     stage.findOne("#game-layer-1").destroyChildren();
     layer.destroyChildren();
+    particles = [];
     titleScreen = true;
     newState("play");
   });
@@ -165,6 +166,7 @@ function makeMenu(layer, stage, newState) {
   optionsButton.on("click", () => {
     stage.findOne("#game-layer-1").destroyChildren();
     layer.destroyChildren();
+    particles = [];
     titleScreen = true;
     newState("options");
   });
@@ -316,10 +318,7 @@ function resetNote(note, noteIndex, layer, stage) {
   if (handleBounds(note, stage) || note.isPopped) {
     particles.splice(noteIndex, 1);
     particles.push(createParticle(layer, stage));
-    note
-      .getLayer()
-      .find("Animation")
-      .forEach((anim) => anim.stop());
+    layer.find("Animation").forEach((anim) => anim.stop());
     note.destroy();
     return true;
   }

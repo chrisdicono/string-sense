@@ -4,7 +4,7 @@ import { PitchDetector } from "https://esm.sh/pitchy@4";
 
 // global variables
 let initialized = false;
-let gameState = "modes";
+let playState = "modes";
 let testing = false;
 let waveform;
 let noteText;
@@ -39,7 +39,7 @@ navigator.mediaDevices
   .catch(console.error);
 
 function handlePlay(primaryLayer, stage, newState) {
-  switch (gameState) {
+  switch (playState) {
     case "modes":
       handleModes(primaryLayer, stage, newState);
       break;
@@ -47,7 +47,7 @@ function handlePlay(primaryLayer, stage, newState) {
       handleTuner(primaryLayer, stage, newState);
       break;
     default:
-      // code
+      console.log(`invalid play state: ${playState}`);
       break;
   }
 }
@@ -135,6 +135,29 @@ function updatePitch(detector, input) {
 
 function handleTuner(primaryLayer, stage, newState) {
   if (!initialized) {
+    const backButton = new Konva.Text({
+      x: 25,
+      y: 13,
+      text: "<",
+      fontSize: 30,
+      fontFamily: "Space Mono",
+      fill: "#ddd",
+      offsetX: 0,
+    });
+    backButton.offsetX(backButton.width() / 2);
+
+    backButton.on("mouseover", () => {
+      backButton.fill("#fff");
+    });
+    backButton.on("mouseout", () => {
+      backButton.fill("#ddd");
+    });
+    backButton.on("click", () => {
+      primaryLayer.destroyChildren();
+      initialized = false;
+      playState = "modes";
+    });
+
     const promptText = new Konva.Text({
       x: stage.width() / 2,
       y: stage.height() / 2 - 95,
@@ -176,6 +199,7 @@ function handleTuner(primaryLayer, stage, newState) {
       strokeWidth: 2,
     });
 
+    primaryLayer.add(backButton);
     primaryLayer.add(promptText);
     primaryLayer.add(noteText);
     primaryLayer.add(waveBg);
@@ -259,6 +283,11 @@ function handleModes(primaryLayer, stage, newState) {
     });
     tunerText.on("mouseout", () => {
       tunerText.fill("#ddd");
+    });
+    tunerText.on("click", () => {
+      primaryLayer.destroyChildren();
+      initialized = false;
+      playState = "tuner";
     });
 
     const zenButton = new Konva.Group({
