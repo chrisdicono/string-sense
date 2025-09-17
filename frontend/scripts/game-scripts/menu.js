@@ -46,6 +46,11 @@ function handleMenu(primaryLayer, stage, newState) {
     });
     welcomeText2.offsetX(welcomeText2.width() / 2);
 
+    primaryLayer.add(welcomeText1);
+    primaryLayer.add(titleText);
+    primaryLayer.add(welcomeText2);
+    primaryLayer.draw();
+
     let negOrPos = 1;
     titleText.on("mouseover", () => {
       new Konva.Tween({
@@ -93,11 +98,6 @@ function handleMenu(primaryLayer, stage, newState) {
     }
 
     window.addEventListener("keydown", handleKeyDown);
-
-    primaryLayer.add(welcomeText1);
-    primaryLayer.add(titleText);
-    primaryLayer.add(welcomeText2);
-    primaryLayer.draw();
 
     // spawn particles initially
     for (let i = 0; i < 10; i++) {
@@ -158,12 +158,14 @@ function makeMenu(layer, stage, newState) {
   playButton.on("click", () => {
     stage.findOne("#game-layer-1").destroyChildren();
     layer.destroyChildren();
+    titleScreen = true;
     newState("play");
   });
 
   optionsButton.on("click", () => {
     stage.findOne("#game-layer-1").destroyChildren();
     layer.destroyChildren();
+    titleScreen = true;
     newState("options");
   });
 

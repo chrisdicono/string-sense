@@ -47,7 +47,7 @@ function handlePlay(primaryLayer, stage, newState) {
       handleTuner(primaryLayer, stage, newState);
       break;
     default:
-      console.error(`Invalid game state: ${gameState}`);
+      // code
       break;
   }
 }
@@ -226,6 +226,11 @@ function handleModes(primaryLayer, stage, newState) {
     backButton.on("mouseout", () => {
       backButton.fill("#ddd");
     });
+    backButton.on("click", () => {
+      primaryLayer.destroyChildren();
+      initialized = false;
+      newState("menu");
+    });
 
     const mainText = new Konva.Text({
       x: stage.width() / 2,
@@ -316,6 +321,14 @@ function handleModes(primaryLayer, stage, newState) {
     drillButton.add(optRect2);
     drillButton.add(drillText);
 
+    // short description over hover (possibly animation later)
+    primaryLayer.add(backButton);
+    primaryLayer.add(mainText);
+    primaryLayer.add(tunerText);
+    primaryLayer.add(zenButton);
+    primaryLayer.add(drillButton);
+    primaryLayer.draw();
+
     zenButton.on("mouseover", () => {
       new Konva.Tween({
         node: zenText,
@@ -391,14 +404,6 @@ function handleModes(primaryLayer, stage, newState) {
         easing: Konva.Easings.EaseInOut,
       }).play();
     });
-
-    // short description over hover (possibly animation later)
-    primaryLayer.add(backButton);
-    primaryLayer.add(mainText);
-    primaryLayer.add(tunerText);
-    primaryLayer.add(zenButton);
-    primaryLayer.add(drillButton);
-    primaryLayer.draw();
 
     initialized = true;
   }
