@@ -1,5 +1,5 @@
 // imports
-import Utils from "./Utils.js";
+import Utils from "../Utils.js";
 import { PitchDetector } from "https://esm.sh/pitchy@4";
 
 // TODO: create Config class to store important elements and
@@ -43,6 +43,7 @@ navigator.mediaDevices
   })
   .catch(console.error);
 
+// TODO: adapt to use Config class
 function handlePlay(primaryLayer, stage, newState) {
   switch (playState) {
     case "modes":
@@ -60,6 +61,7 @@ function handlePlay(primaryLayer, stage, newState) {
   }
 }
 
+// TODO: delete when Config class is implemented
 function toggleTestMic() {
   try {
     switch (testing) {
@@ -83,12 +85,14 @@ function toggleTestMic() {
   }
 }
 
+// TODO: utilize modularity to separate this into different file
 function handleDrill(primaryLayer, stage, newState) {
   // code here
 }
 
-// TODO audio seems a little choppy when testing
+// TODO: audio seems a little choppy when testing
 // Waveform too, but waveform looks fine otherwise.
+// TODO: delete when Config class is implemented
 function drawWaveform(layer, stage) {
   analyser.getFloatTimeDomainData(dataArray);
   // plot each point in the waveform
@@ -119,11 +123,13 @@ function drawWaveform(layer, stage) {
   updatePitch(detector, dataArray);
 }
 
+// TODO: delete when Config class is implemented
 function getPitch(detector, input) {
   const [pitch, clarity] = detector.findPitch(input, ctx.sampleRate);
   return pitch;
 }
 
+// TODO: delete when Config class is implemented
 function getNote(detector, input) {
   let pitch = getPitch(detector, input);
   let detectedNote = Utils.roundNearestNote(pitch);
@@ -133,6 +139,7 @@ function getNote(detector, input) {
   return detectedNote;
 }
 
+// TODO: delete when Config class is implemented
 function updatePitch(detector, input) {
   try {
     if (!detector || !input) return;
@@ -151,6 +158,7 @@ function updatePitch(detector, input) {
 
 // TODO: change colors to be a red-orange-yellow gradient
 // with green in the middle
+// TODO: change to be in tuner file (modularity)
 function fillTuner() {
   for (let i = 0; i < tunerBlocks.length; i++) {
     tunerBlocks[i].fill("#dddddd5a");
@@ -170,6 +178,7 @@ function fillTuner() {
   if (offset > 40) tunerBlocks[10].fill("#ddddddff");
 }
 
+// TODO: move to different file with Config class
 function handleTuner(primaryLayer, stage, newState) {
   if (!initialized) {
     const backButton = new Konva.Text({
@@ -321,6 +330,7 @@ function handleTuner(primaryLayer, stage, newState) {
   fillTuner();
 }
 
+// TODO: adapt to use Config class, move to different file (modularity)
 function handleModes(primaryLayer, stage, newState) {
   if (!initialized) {
     window.addEventListener(

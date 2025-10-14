@@ -1,7 +1,7 @@
 // imports
 import { freqs440 } from "./note-freqs.js";
 import handleMenu from "./menu.js";
-import handlePlay from "./play.js";
+import handlePlay from "./play/play.js";
 import handleOptions from "./options.js";
 
 // initialize Konva Stage
