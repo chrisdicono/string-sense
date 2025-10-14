@@ -2,6 +2,10 @@
 import Utils from "./Utils.js";
 import { PitchDetector } from "https://esm.sh/pitchy@4";
 
+// TODO: create Config class to store important elements and
+// methods that may be used across files,
+// encourages modularity
+
 // global variables
 let initialized = false;
 let playState = "modes";
@@ -9,13 +13,14 @@ let testing = false;
 let waveform;
 let noteText;
 let detector;
+let tunerBlocks = [];
 const ctx = new (window.AudioContext || window.webkitAudioContext)();
 const analyser = ctx.createAnalyser();
 const SAMPLE_RATE = 2048;
-const BOX_WIDTH = 500;
-const BOX_HEIGHT = 100;
-const WAVE_START = 205;
-const WAVE_END = 695;
+const BOX_WIDTH = 250;
+const BOX_HEIGHT = 75;
+const WAVE_START = 0;
+const WAVE_END = BOX_WIDTH - BOX_WIDTH / 10;
 
 // audio setup
 let source;
@@ -46,6 +51,9 @@ function handlePlay(primaryLayer, stage, newState) {
     case "tuner":
       handleTuner(primaryLayer, stage, newState);
       break;
+    case "drill":
+      handleDrill(primaryLayer, stage, newState);
+      break;
     default:
       console.log(`invalid play state: ${playState}`);
       break;
@@ -75,6 +83,10 @@ function toggleTestMic() {
   }
 }
 
+function handleDrill(primaryLayer, stage, newState) {
+  // code here
+}
+
 // TODO audio seems a little choppy when testing
 // Waveform too, but waveform looks fine otherwise.
 function drawWaveform(layer, stage) {
@@ -88,7 +100,7 @@ function drawWaveform(layer, stage) {
       break;
     }
     const v = dataArray[i];
-    const y = BOX_HEIGHT / 2 + 280 + (v * BOX_HEIGHT) / 2;
+    const y = BOX_HEIGHT / 2 + (v * BOX_HEIGHT) / 2;
     // console.log("----- point -----");
     // console.log(dataArray[i]);
     // console.log(v);
@@ -107,16 +119,25 @@ function drawWaveform(layer, stage) {
   updatePitch(detector, dataArray);
 }
 
+function getPitch(detector, input) {
+  const [pitch, clarity] = detector.findPitch(input, ctx.sampleRate);
+  return pitch;
+}
+
+function getNote(detector, input) {
+  let pitch = getPitch(detector, input);
+  let detectedNote = Utils.roundNearestNote(pitch);
+  if (detectedNote === "C0") {
+    detectedNote = "-";
+  }
+  return detectedNote;
+}
+
 function updatePitch(detector, input) {
   try {
     if (!detector || !input) return;
 
-    const [pitch, clarity] = detector.findPitch(input, ctx.sampleRate);
-
-    let detectedNote = Utils.roundNearestNote(pitch);
-    if (detectedNote === "C0") {
-      detectedNote = "-";
-    }
+    let detectedNote = getNote(detector, input);
 
     if (noteText) {
       noteText.text(detectedNote);
@@ -126,11 +147,27 @@ function updatePitch(detector, input) {
   } catch (error) {
     console.error("Error in updatePitch:", error);
   }
+}
 
-  // window.setTimeout(
-  //   () => updatePitch(analyserNode, detector, input, sampleRate),
-  //   100
-  // );
+// TODO: change colors to be a red-orange-yellow gradient
+// with green in the middle
+function fillTuner() {
+  for (let i = 0; i < tunerBlocks.length; i++) {
+    tunerBlocks[i].fill("#dddddd5a");
+  }
+
+  let offset = Utils.calculateCentsOff(getPitch(detector, dataArray));
+  if (offset > -50) tunerBlocks[0].fill("#ddddddff");
+  if (offset > -40) tunerBlocks[1].fill("#ddddddff");
+  if (offset > -30) tunerBlocks[2].fill("#ddddddff");
+  if (offset > -20) tunerBlocks[3].fill("#ddddddff");
+  if (offset > -10) tunerBlocks[4].fill("#ddddddff");
+  if (offset > -3) tunerBlocks[5].fill("#ddddddff");
+  if (offset > 3) tunerBlocks[6].fill("#ddddddff");
+  if (offset > 10) tunerBlocks[7].fill("#ddddddff");
+  if (offset > 20) tunerBlocks[8].fill("#ddddddff");
+  if (offset > 30) tunerBlocks[9].fill("#ddddddff");
+  if (offset > 40) tunerBlocks[10].fill("#ddddddff");
 }
 
 function handleTuner(primaryLayer, stage, newState) {
@@ -160,7 +197,7 @@ function handleTuner(primaryLayer, stage, newState) {
 
     const promptText = new Konva.Text({
       x: stage.width() / 2,
-      y: stage.height() / 2 - 95,
+      y: stage.height() / 2 - 155,
       text: "Play any note.",
       fontSize: 30,
       fontFamily: "Space Mono",
@@ -171,7 +208,7 @@ function handleTuner(primaryLayer, stage, newState) {
 
     noteText = new Konva.Text({
       x: stage.width() / 2,
-      y: stage.height() / 2 - 60,
+      y: stage.height() / 2 + 35,
       text: "-",
       fontSize: 70,
       fontFamily: "DynaPuff",
@@ -183,27 +220,89 @@ function handleTuner(primaryLayer, stage, newState) {
     });
     noteText.offsetX(noteText.width() / 2);
 
-    const waveBg = new Konva.Rect({
+    const waveDisplay = new Konva.Group({
       x: stage.width() / 2,
-      y: stage.height() / 2 + 25,
+      y: stage.height() / 2 + 30,
+    });
+
+    const waveBg = new Konva.Rect({
       width: BOX_WIDTH,
       height: BOX_HEIGHT,
-      fill: "#dddddd5a",
+      fill: "#dddddd21",
       cornerRadius: 20,
     });
     waveBg.offsetX(waveBg.width() / 2);
 
     waveform = new Konva.Line({
-      points: [WAVE_START, 330, WAVE_END, 330],
-      stroke: "#8b8b8bff",
+      points: [WAVE_START, BOX_HEIGHT / 2, WAVE_END, BOX_HEIGHT / 2],
+      stroke: "#8b8b8b47",
       strokeWidth: 2,
     });
+    waveform.offsetX(waveform.width() / 2);
+
+    waveDisplay.add(waveBg);
+    waveDisplay.add(waveform);
+
+    const centerX = stage.width() / 2;
+    const centerY = stage.height() / 2 + 150;
+    const radius = 200;
+
+    // tuner blocks
+    for (let i = 5; i >= 1; i--) {
+      const angleDeg = (-80 / 5) * i;
+      const angleRad = Konva.getAngle(angleDeg);
+      const x = centerX + radius * Math.sin(angleRad) + 10;
+      const y = centerY - radius * Math.cos(angleRad);
+      const tempBlock = new Konva.Rect({
+        x,
+        y,
+        width: 50,
+        height: 25,
+        fill: "#dddddd5a",
+        cornerRadius: 20,
+        rotation: (-80 / 5) * i,
+      });
+      tempBlock.offsetX(tempBlock.width() / 2);
+      tempBlock.offsetY(tempBlock.height() / 2);
+      tunerBlocks.push(tempBlock);
+    }
+    const middleBlock = new Konva.Rect({
+      x: centerX,
+      y: centerY - 200,
+      width: 25,
+      height: 50,
+      fill: "#dddddd5a",
+      cornerRadius: 20,
+    });
+    middleBlock.offsetX(middleBlock.width() / 2);
+    middleBlock.offsetY(middleBlock.height() / 2);
+    tunerBlocks.push(middleBlock);
+    for (let i = 1; i <= 5; i++) {
+      const angleDeg = (80 / 5) * i;
+      const angleRad = Konva.getAngle(angleDeg);
+      const x = centerX + radius * Math.sin(angleRad) - 10;
+      const y = centerY - radius * Math.cos(angleRad);
+      const tempBlock = new Konva.Rect({
+        x,
+        y,
+        width: 50,
+        height: 25,
+        fill: "#dddddd5a",
+        cornerRadius: 20,
+        rotation: (80 / 5) * i,
+      });
+      tempBlock.offsetX(tempBlock.width() / 2);
+      tempBlock.offsetY(tempBlock.height() / 2);
+      tunerBlocks.push(tempBlock);
+    }
 
     primaryLayer.add(backButton);
     primaryLayer.add(promptText);
+    primaryLayer.add(waveDisplay);
     primaryLayer.add(noteText);
-    primaryLayer.add(waveBg);
-    primaryLayer.add(waveform);
+    for (const block of tunerBlocks) {
+      primaryLayer.add(block);
+    }
     primaryLayer.draw();
 
     window.addEventListener("keydown", (keyEvent) => {
@@ -219,6 +318,7 @@ function handleTuner(primaryLayer, stage, newState) {
   }
 
   drawWaveform(primaryLayer, stage);
+  fillTuner();
 }
 
 function handleModes(primaryLayer, stage, newState) {
@@ -349,6 +449,12 @@ function handleModes(primaryLayer, stage, newState) {
     zenButton.add(zenText);
     drillButton.add(optRect2);
     drillButton.add(drillText);
+
+    drillButton.on("click", () => {
+      primaryLayer.destroyChildren();
+      initialized = false;
+      playState = "drill";
+    });
 
     // short description over hover (possibly animation later)
     primaryLayer.add(backButton);

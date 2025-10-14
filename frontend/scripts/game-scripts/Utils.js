@@ -9,8 +9,8 @@ class Utils {
     Calculates the amount of cents off a note is from a target pitch.
     */
   static calculateCentsOff(frequency) {
-    const targetFrequency = freqs440.get(roundNearestNote(frequency));
-    return 1200 * log2(frequency / targetFrequency);
+    const targetFrequency = freqs440.get(Utils.roundNearestNote(frequency));
+    return 1200 * Math.log2(frequency / targetFrequency);
   }
 
   /*
