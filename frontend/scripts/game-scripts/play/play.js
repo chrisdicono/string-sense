@@ -11,6 +11,7 @@ let initialized = false;
 function handlePlay(primaryLayer, stage, newState) {
   if (!initialized) {
     playConfig = new PlayConfig(stage);
+    initialized = true;
   }
   switch (playConfig.playState) {
     case "modes":
