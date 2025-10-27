@@ -183,13 +183,13 @@ class PlayConfig {
     this._detector = newDetector;
   }
 
-  pushToTunerBlocks(newBlock) {
+  pushToTunerBlocks(newNoteText) {
     if (!(newNoteText instanceof Konva.Rect)) {
       console.error(
         "Invalid input: the pushed block must be a Konva.Rect instance."
       );
     }
-    this._tunerBlocks.push(newBlocks);
+    this._tunerBlocks.push(newNoteText);
   }
 
   // resume audio context if suspended
@@ -251,7 +251,7 @@ class PlayConfig {
 
     // redraw afterwards
     layer.draw();
-    updatePitch(this._detector, this._dataArray);
+    this.updatePitch(this._dataArray);
   }
 
   // Use pitchy to get the pitch from the audio input
@@ -264,8 +264,8 @@ class PlayConfig {
   }
 
   // Get the nearest note from the detected pitch
-  getNote(detector, input) {
-    let pitch = this.getPitch(detector, input);
+  getNote(input) {
+    let pitch = this.getPitch(input);
     let detectedNote = Utils.roundNearestNote(pitch);
     if (detectedNote === "C0") {
       detectedNote = "-";
@@ -291,22 +291,22 @@ class PlayConfig {
   }
 
   fillTuner() {
-    for (let i = 0; i < tunerBlocks.length; i++) {
-      tunerBlocks[i].fill("#dddddd5a");
+    for (let i = 0; i < this._tunerBlocks.length; i++) {
+      this._tunerBlocks[i].fill("#dddddd5a");
     }
 
-    let offset = Utils.calculateCentsOff(getPitch(detector, dataArray));
-    if (offset > -50) tunerBlocks[0].fill("#E63946ff");
-    if (offset > -40) tunerBlocks[1].fill("#F77F00ff");
-    if (offset > -30) tunerBlocks[2].fill("#FCBF49ff");
-    if (offset > -20) tunerBlocks[3].fill("#FDD835ff");
-    if (offset > -10) tunerBlocks[4].fill("#F9E79Fff");
-    if (offset > -3) tunerBlocks[5].fill("#06d64fff");
-    if (offset > 3) tunerBlocks[6].fill("#F9E79Fff");
-    if (offset > 10) tunerBlocks[7].fill("#FDD835ff");
-    if (offset > 20) tunerBlocks[8].fill("#FCBF49ff");
-    if (offset > 30) tunerBlocks[9].fill("#F77F00ff");
-    if (offset > 40) tunerBlocks[10].fill("#E63946ff");
+    let offset = Utils.calculateCentsOff(this.getPitch(this._dataArray));
+    if (offset > -50) this._tunerBlocks[0].fill("#E63946ff");
+    if (offset > -40) this._tunerBlocks[1].fill("#F77F00ff");
+    if (offset > -30) this._tunerBlocks[2].fill("#FCBF49ff");
+    if (offset > -20) this._tunerBlocks[3].fill("#FDD835ff");
+    if (offset > -10) this._tunerBlocks[4].fill("#F9E79Fff");
+    if (offset > -3) this._tunerBlocks[5].fill("#06d64fff");
+    if (offset > 3) this._tunerBlocks[6].fill("#F9E79Fff");
+    if (offset > 10) this._tunerBlocks[7].fill("#FDD835ff");
+    if (offset > 20) this._tunerBlocks[8].fill("#FCBF49ff");
+    if (offset > 30) this._tunerBlocks[9].fill("#F77F00ff");
+    if (offset > 40) this._tunerBlocks[10].fill("#E63946ff");
   }
 }
 

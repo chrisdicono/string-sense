@@ -21,9 +21,9 @@ function handleTuner(primaryLayer, stage, newState, playConfig) {
       backButton.fill("#ddd");
     });
     backButton.on("click", () => {
-      primaryLayer.destroyChildren();
-      initialized = false;
-      playState = "modes";
+      primaryLayer.removeChildren();
+      playConfig.initialized = false;
+      playConfig.playState = "modes";
     });
 
     const promptText = new Konva.Text({
@@ -43,15 +43,15 @@ function handleTuner(primaryLayer, stage, newState, playConfig) {
     });
 
     const waveBg = new Konva.Rect({
-      width: BOX_WIDTH,
-      height: BOX_HEIGHT,
+      width: playConfig.BOX_WIDTH,
+      height: playConfig.BOX_HEIGHT,
       fill: "#dddddd21",
       cornerRadius: 20,
     });
     waveBg.offsetX(waveBg.width() / 2);
 
     waveDisplay.add(waveBg);
-    waveDisplay.add(waveform);
+    waveDisplay.add(playConfig.waveform);
 
     const centerX = stage.width() / 2;
     const centerY = stage.height() / 2 + 150;
@@ -85,7 +85,7 @@ function handleTuner(primaryLayer, stage, newState, playConfig) {
     });
     middleBlock.offsetX(middleBlock.width() / 2);
     middleBlock.offsetY(middleBlock.height() / 2);
-    playConfig.pushToTunerBlocks(tempBlock);
+    playConfig.pushToTunerBlocks(middleBlock);
     for (let i = 1; i <= 5; i++) {
       const angleDeg = (80 / 5) * i;
       const angleRad = Konva.getAngle(angleDeg);
@@ -108,18 +108,16 @@ function handleTuner(primaryLayer, stage, newState, playConfig) {
     primaryLayer.add(backButton);
     primaryLayer.add(promptText);
     primaryLayer.add(waveDisplay);
-    primaryLayer.add(noteText);
-    for (const block of tunerBlocks) {
+    primaryLayer.add(playConfig.noteText);
+    for (const block of playConfig.tunerBlocks) {
       primaryLayer.add(block);
     }
     primaryLayer.draw();
 
     window.addEventListener("keydown", (keyEvent) => {
-      if (ctx.state === "suspended") {
-        ctx.resume();
-      }
+      playConfig.resumeAudioContext();
       if (keyEvent.key == "t") {
-        toggleTestMic();
+        playConfig.toggleTestMic();
       }
     });
 
