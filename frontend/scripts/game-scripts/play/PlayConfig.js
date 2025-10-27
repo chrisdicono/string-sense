@@ -1,69 +1,45 @@
 import Utils from "../Utils.js";
 import { PitchDetector } from "https://esm.sh/pitchy@4";
 
-// 1. Create a class
-class School {
-  // 2. Constructor with 3 parameters
-  constructor(name, level, numberOfStudents) {
-    // 3. Set properties
-    this._name = name;
-    this._level = level;
-    this._numberOfStudents = numberOfStudents;
-  }
-
-  // 4. Getters
-  get name() {
-    return this._name;
-  }
-
-  get level() {
-    return this._level;
-  }
-
-  get numberOfStudents() {
-    return this._numberOfStudents;
-  }
-
-  // 5. Setter
-  set numberOfStudents(newNumberOfStudents) {
-    if (typeof newNumberOfStudents === "number") {
-      this._numberOfStudents = newNumberOfStudents;
-    } else {
-      console.log("Invalid input: numberOfStudents must be set to a Number.");
-    }
-  }
-
-  // 6. quickFacts()
-  quickFacts() {
-    console.log(
-      `${this.name} educates ${this.numberOfStudents} students at the ${this.level} school level.`
-    );
-  }
-
-  // 7. pickSubstituteTeacher()
-  static pickSubstituteTeacher(substituteTeachers) {
-    const randIndex = Math.floor(Math.random() * substituteTeachers.length);
-    return substituteTeachers[randIndex];
-  }
-}
-
 class PlayConfig {
-  constructor() {
+  constructor(stage) {
     // global variables
-    this._initialized = false;
-    this._playState = "modes";
-    this._testing = false;
-    this._waveform = null;
-    this._noteText = null;
-    this._detector = null;
-    this._tunerBlocks = [];
-    this._ctx = new (window.AudioContext || window.webkitAudioContext)();
-    this._analyser = this._ctx.createAnalyser();
     this._SAMPLE_RATE = 2048;
     this._BOX_WIDTH = 250;
     this._BOX_HEIGHT = 75;
     this._WAVE_START = 0;
     this._WAVE_END = this._BOX_WIDTH - this._BOX_WIDTH / 10;
+    this._initialized = false;
+    this._playState = "modes";
+    this._testing = false;
+    this._waveform = new Konva.Line({
+      points: [
+        this._WAVE_START,
+        this._BOX_HEIGHT / 2,
+        this._WAVE_END,
+        this._BOX_HEIGHT / 2,
+      ],
+      stroke: "#8b8b8b47",
+      strokeWidth: 2,
+    });
+    this._waveform.offsetX(this._waveform.width() / 2);
+    this._noteText = new Konva.Text({
+      x: stage.width() / 2,
+      y: stage.height() / 2 + 35,
+      text: "-",
+      fontSize: 70,
+      fontFamily: "DynaPuff",
+      fill: "#ddd",
+      offsetX: 0,
+      align: "center",
+      alignVertical: "middle",
+      id: "note",
+    });
+    this._noteText.offsetX(this._noteText.width() / 2);
+    this._detector = null;
+    this._tunerBlocks = [];
+    this._ctx = new (window.AudioContext || window.webkitAudioContext)();
+    this._analyser = this._ctx.createAnalyser();
 
     // audio variables
     this._source = null;
@@ -89,8 +65,141 @@ class PlayConfig {
     // other game variables can go here
   }
 
-  // getters or setters can go here as needed
+  // getters and setters below
+  get initialized() {
+    return this._initialized;
+  }
 
+  get playState() {
+    return this._playState;
+  }
+
+  get testing() {
+    return this._testing;
+  }
+
+  get waveform() {
+    return this._waveform;
+  }
+
+  get noteText() {
+    return this._noteText;
+  }
+
+  get detector() {
+    return this._detector;
+  }
+
+  get tunerBlocks() {
+    return this._tunerBlocks;
+  }
+
+  get ctx() {
+    return this._ctx;
+  }
+
+  get analyser() {
+    return this._analyser;
+  }
+
+  get SAMPLE_RATE() {
+    return this._SAMPLE_RATE;
+  }
+
+  get BOX_WIDTH() {
+    return this._BOX_WIDTH;
+  }
+
+  get BOX_HEIGHT() {
+    return this._BOX_HEIGHT;
+  }
+
+  get WAVE_START() {
+    return this._WAVE_START;
+  }
+
+  get WAVE_END() {
+    return this._WAVE_END;
+  }
+
+  get source() {
+    return this._source;
+  }
+
+  get bufferLength() {
+    return this._bufferLength;
+  }
+
+  get dataArray() {
+    return this._dataArray;
+  }
+
+  set initialized(value) {
+    if (typeof value !== "boolean") {
+      console.error("Invalid input: initialized must be set to a Boolean.");
+      return;
+    }
+    this._initialized = value;
+  }
+
+  set playState(newState) {
+    const validStates = ["modes", "tuner", "drill"];
+    if (validStates.includes(newState)) {
+      this._playState = newState;
+    } else {
+      console.warn(`Invalid play state: ${newState}`);
+    }
+  }
+
+  set testing(value) {
+    if (typeof value !== "boolean") {
+      console.error("Invalid input: testing must be set to a Boolean.");
+      return;
+    }
+    this._testing = value;
+  }
+
+  set waveform(newWaveform) {
+    if (!(newWaveform instanceof Konva.Line)) {
+      console.error("Invalid input: waveform must be a Konva.Line instance.");
+      return;
+    }
+    this._waveform = newWaveform;
+  }
+
+  set noteText(newNoteText) {
+    if (!(newNoteText instanceof Konva.Text)) {
+      console.error("Invalid input: noteText must be a Konva.Text instance.");
+      return;
+    }
+    this._noteText = newNoteText;
+  }
+
+  set detector(newDetector) {
+    if (!(newDetector && typeof newDetector.findPitch === "function")) {
+      console.error("Invalid input: detector must have a findPitch method.");
+      return;
+    }
+    this._detector = newDetector;
+  }
+
+  pushToTunerBlocks(newBlock) {
+    if (!(newNoteText instanceof Konva.Rect)) {
+      console.error(
+        "Invalid input: the pushed block must be a Konva.Rect instance."
+      );
+    }
+    this._tunerBlocks.push(newBlocks);
+  }
+
+  // resume audio context if suspended
+  resumeAudioContext() {
+    if (this._ctx.state === "suspended") {
+      this._ctx.resume();
+    }
+  }
+
+  // Toggle microphone testing (connect/disconnect analyser to destination)
   toggleTestMic() {
     try {
       switch (this._testing) {
@@ -114,6 +223,7 @@ class PlayConfig {
     }
   }
 
+  // Draw the waveform on the given Konva layer
   drawWaveform(layer, stage) {
     this._analyser.getFloatTimeDomainData(this._dataArray);
     // plot each point in the waveform
@@ -144,6 +254,7 @@ class PlayConfig {
     updatePitch(this._detector, this._dataArray);
   }
 
+  // Use pitchy to get the pitch from the audio input
   getPitch(input) {
     const [pitch, clarity] = this._detector.findPitch(
       input,
@@ -152,6 +263,7 @@ class PlayConfig {
     return pitch;
   }
 
+  // Get the nearest note from the detected pitch
   getNote(detector, input) {
     let pitch = this.getPitch(detector, input);
     let detectedNote = Utils.roundNearestNote(pitch);
@@ -161,6 +273,7 @@ class PlayConfig {
     return detectedNote;
   }
 
+  // Update the pitch and note display
   updatePitch(input) {
     try {
       if (!this._detector || !input) return;
@@ -175,6 +288,25 @@ class PlayConfig {
     } catch (error) {
       console.error("Error in updatePitch:", error);
     }
+  }
+
+  fillTuner() {
+    for (let i = 0; i < tunerBlocks.length; i++) {
+      tunerBlocks[i].fill("#dddddd5a");
+    }
+
+    let offset = Utils.calculateCentsOff(getPitch(detector, dataArray));
+    if (offset > -50) tunerBlocks[0].fill("#E63946ff");
+    if (offset > -40) tunerBlocks[1].fill("#F77F00ff");
+    if (offset > -30) tunerBlocks[2].fill("#FCBF49ff");
+    if (offset > -20) tunerBlocks[3].fill("#FDD835ff");
+    if (offset > -10) tunerBlocks[4].fill("#F9E79Fff");
+    if (offset > -3) tunerBlocks[5].fill("#06d64fff");
+    if (offset > 3) tunerBlocks[6].fill("#F9E79Fff");
+    if (offset > 10) tunerBlocks[7].fill("#FDD835ff");
+    if (offset > 20) tunerBlocks[8].fill("#FCBF49ff");
+    if (offset > 30) tunerBlocks[9].fill("#F77F00ff");
+    if (offset > 40) tunerBlocks[10].fill("#E63946ff");
   }
 }
 
