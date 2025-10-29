@@ -56,7 +56,7 @@ function gameLoop() {
       break;
     case "options":
       handleOptions(layer2, stage, (newState) => {
-        gameState = newState;
+        gameState = menu;
       });
       break;
     default:

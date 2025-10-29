@@ -223,9 +223,17 @@ class PlayConfig {
     }
   }
 
-  // Draw the waveform on the given Konva layer
-  drawWaveform(layer, stage) {
+  // waits for the components needed in drawWaveform to be defined before continuing
+  async waitForAudioCtx() {
+    while (!this._analyser || !this._dataArray) {
+      await new Promise((resolve) => setTimeout(resolve, 10));
+    }
     this._analyser.getFloatTimeDomainData(this._dataArray);
+  }
+
+  // Draw the waveform on the given Konva layer
+  drawWaveform(layer) {
+    this.waitForAudioCtx();
     // plot each point in the waveform
     const sliceWidth = this._BOX_WIDTH / this._bufferLength;
     let x = this._WAVE_START;
@@ -253,6 +261,8 @@ class PlayConfig {
     layer.draw();
     this.updatePitch(this._dataArray);
   }
+
+  // draws the waveform with a background at the given coordinates
 
   // Use pitchy to get the pitch from the audio input
   getPitch(input) {

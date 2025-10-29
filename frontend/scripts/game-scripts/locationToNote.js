@@ -1,0 +1,94 @@
+const lowE = new Map();
+const aStr = new Map();
+const dStr = new Map();
+const gStr = new Map();
+const bStr = new Map();
+const highE = new Map();
+
+lowE.set(0, "E2");
+lowE.set(1, "F2");
+lowE.set(2, "F#2");
+lowE.set(3, "G2");
+lowE.set(4, "G#2");
+lowE.set(5, "A2");
+lowE.set(6, "A#2");
+lowE.set(7, "B2");
+lowE.set(8, "C3");
+lowE.set(9, "C#3");
+lowE.set(10, "D3");
+lowE.set(11, "D#3");
+lowE.set(12, "E3");
+
+aStr.set(0, "A2");
+aStr.set(1, "A#2");
+aStr.set(2, "B2");
+aStr.set(3, "C3");
+aStr.set(4, "C#3");
+aStr.set(5, "D3");
+aStr.set(6, "D#3");
+aStr.set(7, "E3");
+aStr.set(8, "F3");
+aStr.set(9, "F#3");
+aStr.set(10, "G3");
+aStr.set(11, "G#3");
+aStr.set(12, "A3");
+
+dStr.set(0, "D3");
+dStr.set(1, "D#3");
+dStr.set(2, "E3");
+dStr.set(3, "F3");
+dStr.set(4, "F#3");
+dStr.set(5, "G3");
+dStr.set(6, "G#3");
+dStr.set(7, "A3");
+dStr.set(8, "A#3");
+dStr.set(9, "B3");
+dStr.set(10, "C4");
+dStr.set(11, "C#4");
+dStr.set(12, "D4");
+
+gStr.set(0, "G3");
+gStr.set(1, "G#3");
+gStr.set(2, "A3");
+gStr.set(3, "A#3");
+gStr.set(4, "B3");
+gStr.set(5, "C4");
+gStr.set(6, "C#4");
+gStr.set(7, "D4");
+gStr.set(8, "D#4");
+gStr.set(9, "E3");
+gStr.set(10, "F4");
+gStr.set(11, "F#4");
+gStr.set(12, "G4");
+
+bStr.set(0, "B3");
+bStr.set(1, "C4");
+bStr.set(2, "C#4");
+bStr.set(3, "D4");
+bStr.set(4, "D#4");
+bStr.set(5, "E4");
+bStr.set(6, "G4");
+bStr.set(7, "F#4");
+bStr.set(8, "G4");
+bStr.set(9, "G#4");
+bStr.set(10, "A4");
+bStr.set(11, "A#4");
+bStr.set(12, "B4");
+
+highE.set(0, "E4");
+highE.set(1, "F4");
+highE.set(2, "F#4");
+highE.set(3, "G4");
+highE.set(4, "G#4");
+highE.set(5, "A4");
+highE.set(6, "A#4");
+highE.set(7, "B4");
+highE.set(8, "C5");
+highE.set(9, "C#5");
+highE.set(10, "D5");
+highE.set(11, "D#5");
+highE.set(12, "E5");
+
+const locationToNote = [lowE, aStr, dStr, gStr, bStr, highE];
+
+export default locationToNote;

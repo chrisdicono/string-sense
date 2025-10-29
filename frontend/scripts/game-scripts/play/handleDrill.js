@@ -4,18 +4,27 @@ import Guitar from "./Guitar.js";
 import Game from "./Game.js";
 
 // global variables and setup
+let game = null;
+let guitar = null;
 let userPref = {};
 
 function handleDrill(primaryLayer, stage, newState, playConfig) {
   if (!playConfig.initialized) {
-    let guitar = new Guitar(150, 100);
-    primaryLayer.add(guitar._fretboardDisplay);
+    game = new Game(primaryLayer, playConfig);
+    guitar = game.guitar;
+    primaryLayer.add(game.display);
     primaryLayer.draw();
+    setTimeout(() => game.pluckCurrentNote(), 750);
 
     playConfig.initialized = true;
   }
 
-  // extra code here
+  game.updateWaveform();
 }
 
 export default handleDrill;
+
+// setTimeout(() => {
+//   guitar.animateNoteSelection(0, 11, false);
+//   console.log("incorrect animation played");
+// }, 1000);

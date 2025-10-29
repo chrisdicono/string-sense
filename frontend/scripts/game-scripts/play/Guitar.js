@@ -1,15 +1,24 @@
 import Utils from "../Utils.js";
+import locationToNote from "../locationToNote.js";
 
-// Guitar class consists of:
-// - Guitar display
-// - Current note
-// - Change current note
-// - Methods related to selection
-// - Animation for incorrect choice
-// - Animation/dealing with correct choice
+const preferredNotes = [
+  "A",
+  "A#",
+  "B",
+  "C",
+  "C#",
+  "D",
+  "D#",
+  "E",
+  "F",
+  "F#",
+  "G",
+  "G#",
+];
+const preferredStrings = [1, 2, 3, 4, 5, 6];
 
 class Guitar {
-  constructor(dispX, dispY) {
+  constructor(dispX, dispY, selectedNotes, selectedStrings) {
     // constants and variable definition
     const fretboardX = 0;
     const fretboardY = 0;
@@ -19,10 +28,28 @@ class Guitar {
     const numStrings = 6;
     const cornerRadius = 10;
     const stringSpacing = fretboardHeight / (numStrings - 1);
+    this._currentNote = null;
+    // create list of valid notes
+    this._validNotes = [];
+    for (let s = 0; s < numStrings; s++) {
+      for (let f = 0; f < numFrets; f++) {
+        let tempNote = new Note(f, s);
+        if (
+          preferredNotes.includes(
+            tempNote.pitch.substring(0, tempNote.pitch.length - 1)
+          )
+        ) {
+          this._validNotes.push(tempNote);
+        }
+      }
+    }
+    this._worstNotes = new Map();
+    this._bestNotes = new Map();
     let strings = [];
     let fretPositions = [];
     this._fretNumbers = [];
     this._numbersHidden = true;
+    this._notes = [];
     // display groups
     this._fretboardDisplay = new Konva.Group({
       x: dispX,
@@ -127,9 +154,168 @@ class Guitar {
     for (const t of this._fretNumbers) {
       t.opacity(0);
     }
+    // add notes, opacity 0 by default
+    let noteRadius = 8;
+    for (let i = 0; i < 6; i++) {
+      let noteY = fretboardY + fretboardHeight - i * stringSpacing;
+      let tempArray = [];
+      for (let j = 0; j < numFrets; j++) {
+        let noteX = fretboardX + (fretPositions[j] + fretPositions[j + 1]) / 2;
+        let tempNote = new Konva.Circle({
+          x: noteX,
+          y: noteY,
+          radius: noteRadius + Math.abs(12 - j) * 0.2,
+          fill: "#444",
+          opacity: 0,
+        });
+        tempArray.push(tempNote);
+        this._fretboardDisplay.add(tempNote);
+      }
+      this._notes.push(tempArray);
+    }
+    this.newRandomNote();
   }
 
-  // code here
+  // getters
+  get fretboardDisplay() {
+    return this._fretboardDisplay;
+  }
+
+  get currentNote() {
+    return this._currentNote;
+  }
+
+  get validNotes() {
+    return this._validNotes;
+  }
+
+  get numbersHidden() {
+    return this._numbersHidden;
+  }
+
+  get notes() {
+    return this._notes;
+  }
+
+  // returns the current note's pitch and string
+  currentNotePitch() {
+    return this._currentNote.pitch;
+  }
+
+  // returns the current note's pitch and string
+  currentNoteString() {
+    return this._currentNote.string;
+  }
+
+  // returns the current note's pitch and string
+  currentNotePitchAndString() {
+    return [this.currentNotePitch(), this.currentNoteString()];
+  }
+
+  // TODO: add getters for best and worst heatmap
+
+  // setters
+  set currentNote(newNote) {
+    if (!newNote instanceof Note) {
+      console.error("The new note must be an instance of the Note class.");
+      return;
+    }
+    this._currentNote = newNote;
+  }
+
+  // change current note randomly
+  newRandomNote() {
+    let tempNote =
+      this.validNotes[Math.floor(Math.random() * this.validNotes.length)];
+    this._currentNote = tempNote;
+  }
+
+  // determines the location of a note based on its string and fret
+  noteXY(note) {
+    let string = note.string;
+    let fret = note.fret;
+    let noteX =
+      fretboardX + (fretPositions[fret] + fretPositions[fret + 1]) / 2;
+    let noteY = fretboardY + string * stringSpacing;
+    return [noteX, noteY];
+  }
+
+  // animates and briefly displays a note that is either correct or incorrect
+  animateNoteSelection(string, fret, isCorrect) {
+    let note = this.notes[string][fret];
+    isCorrect ? note.fill("#2f9e4cff") : note.fill("#b23636ff");
+    const fadeIn = new Konva.Tween({
+      node: note,
+      duration: 0.3,
+      opacity: 1,
+      easing: Konva.Easings.EaseOut,
+      onFinish: () => {
+        const fadeOut = new Konva.Tween({
+          node: note,
+          duration: 0.3,
+          opacity: 0,
+          easing: Konva.Easings.EaseOut,
+        });
+        setTimeout(() => fadeOut.play(), 1500);
+      },
+    });
+    const popIn1 = new Konva.Tween({
+      node: note,
+      duration: 0.1,
+      scaleX: 1.2,
+      scaleY: 1.2,
+      easing: Konva.Easings.EaseOut,
+      onFinish: () => {
+        const popIn2 = new Konva.Tween({
+          node: note,
+          duration: 0.5,
+          scaleX: 1,
+          scaleY: 1,
+          easing: Konva.Easings.EaseOut,
+        });
+        popIn2.play();
+      },
+    });
+    fadeIn.play();
+    popIn1.play();
+  }
+
+  // adds a note to the given heatmap, and appends the count if it already exists
+  addNoteToHeatmap(note, map) {
+    const key = `${note.fret}:${note.string}`;
+    map.set(key, (map.get(key) || 0) + 1);
+  }
+
+  // adds a note to the worstNotes map
+  addWorstNote(note) {
+    this.addNoteToHeatmap(note, this._worstNotes);
+  }
+
+  // adds a note to the bestNotes map
+  addBestNote(note) {
+    this.addNoteToHeatmap(note, this._bestNotes);
+  }
+}
+
+class Note {
+  constructor(fret, string) {
+    this._fret = fret;
+    this._string = string;
+    this._pitch = locationToNote[string].get(fret);
+  }
+
+  // getters
+  get fret() {
+    return this._fret;
+  }
+
+  get string() {
+    return this._string;
+  }
+
+  get pitch() {
+    return this._pitch;
+  }
 }
 
 export default Guitar;

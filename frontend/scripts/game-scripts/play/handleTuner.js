@@ -124,7 +124,7 @@ function handleTuner(primaryLayer, stage, newState, playConfig) {
     playConfig.initialized = true;
   }
 
-  playConfig.drawWaveform(primaryLayer, stage);
+  playConfig.drawWaveform(primaryLayer);
   playConfig.fillTuner();
 }
 
