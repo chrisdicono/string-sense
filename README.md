@@ -1,11 +1,11 @@
 <div>
-<h1 style="margin-bottom:0;padding-bottom:0">Introducing: 
+<h1 style="margin-bottom:0;padding-bottom:0">🎸 Introducing: 
 StringSense!</h1>
 <h3 style="margin-top:0">An interactive memory game for 
 guitarists</h3>
 </div>
 
-## Motive
+## 💭 Motive
 
 The fretboard has a _lot_ of notes. On a standard 22-fret guitar,
 there are 132 different fretted notes, and 4-5 ways to play one
@@ -39,7 +39,7 @@ spots? If not, StringSense could be what you're looking for to help
 you internalize the fretboard in a fun and engaging way. All you need
 is a microphone, a guitar, and a calm place to play!
 
-## How to Use
+## 🎼 How to Use
 
 StringSense is not yet in operation, but it will eventually be hosted
 on the web. Users will simply visit the website in a browser of their
@@ -91,13 +91,13 @@ through the menu. <Br>
 usablility on desktop/laptop computers. Support for mobile devices is
 coming soon.**
 
-## Tech Stack
+## 🎛️ Tech Stack
 
 **Front-End:** JavaScript, HTML/CSS
 <br>
 **JS Libaries Used:** Web Audio API, Tone.js, pitchy, Konva.js
 
-## Acknowledgements and Notes
+## 🗒️ Acknowledgements and Notes
 
 Everything in this project was made by Chris DiCono (me!).
 <br>
