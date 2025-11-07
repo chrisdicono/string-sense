@@ -3,7 +3,15 @@ import Guitar from "./Guitar.js";
 
 // global variables
 let noteText = null;
+let scoreText = null;
+let lastPlayedNoteText = null;
 let stringText = null;
+// TODO: remove these testing variables
+let testQual1 = null;
+let testQual2 = null;
+let testQual3 = null;
+let testQual4 = null;
+let testQual5 = null;
 let pluck = Utils.initiializePluck();
 
 class Game {
@@ -16,6 +24,57 @@ class Game {
     });
     this._guitar = new Guitar(150, 100);
     this._display.add(this._guitar.fretboardDisplay);
+
+    this._score = 0;
+    this._firstTry = true;
+    this._totalRounds = 1;
+    this._mostRecentNote = "-";
+
+    const scoreLabel = new Konva.Text({
+      x: 202,
+      y: 27,
+      text: "score:",
+      fontSize: 20,
+      fontFamily: "Space Mono",
+      fill: "#ddd",
+      offsetX: 0,
+    });
+    scoreLabel.offsetX(scoreLabel.width() / 2);
+    this.display.add(scoreLabel);
+    scoreText = new Konva.Text({
+      x: 200,
+      y: 50,
+      text: this._score + " / " + this._totalRounds,
+      fontSize: 40,
+      fontFamily: "DynaPuff",
+      fill: "#ddd",
+      offsetX: 0,
+    });
+    scoreText.offsetX(scoreText.width() / 2);
+    this.display.add(scoreText);
+
+    const lastPlayedText = new Konva.Text({
+      x: 415,
+      y: 50,
+      text: "You played:",
+      fontSize: 30,
+      fontFamily: "Space Mono",
+      fill: "#ddd",
+      offsetX: 0,
+    });
+    lastPlayedText.offsetX(lastPlayedText.width() / 2);
+    lastPlayedNoteText = new Konva.Text({
+      x: 555,
+      y: 45,
+      text: this._mostRecentNote,
+      fontSize: 40,
+      fontFamily: "DynaPuff",
+      fill: "#ddd",
+      offsetX: 0,
+    });
+    lastPlayedNoteText.offsetX(lastPlayedNoteText.width() / 2);
+    this.display.add(lastPlayedText);
+    this.display.add(lastPlayedNoteText);
 
     const waveDisplay = new Konva.Group({
       x: 450,
@@ -241,11 +300,59 @@ class Game {
     this._guitar.newRandomNote();
     this.updateTarget();
 
-    this._score = 0;
-    this._firstTry = true;
-    this._totalRounds = 1;
-
-    // TODO: add score display
+    // ==================
+    //   testing stuff
+    // ==================
+    const timbreText = new Konva.Text({
+      x: 600,
+      y: 0,
+      text: "Timbre: " + testQual1,
+      fontSize: 20,
+      fontFamily: "Space Mono",
+      fill: "#ddd",
+      offsetX: 0,
+    });
+    const q2Text = new Konva.Text({
+      x: 600,
+      y: 20,
+      text: "Qual 2: " + testQual2,
+      fontSize: 20,
+      fontFamily: "Space Mono",
+      fill: "#ddd",
+      offsetX: 0,
+    });
+    const q3Text = new Konva.Text({
+      x: 600,
+      y: 40,
+      text: "Qual 3: " + testQual3,
+      fontSize: 20,
+      fontFamily: "Space Mono",
+      fill: "#ddd",
+      offsetX: 0,
+    });
+    const q4Text = new Konva.Text({
+      x: 600,
+      y: 60,
+      text: "Qual 4: " + testQual4,
+      fontSize: 20,
+      fontFamily: "Space Mono",
+      fill: "#ddd",
+      offsetX: 0,
+    });
+    const q5Text = new Konva.Text({
+      x: 600,
+      y: 80,
+      text: "Qual 5: " + testQual5,
+      fontSize: 20,
+      fontFamily: "Space Mono",
+      fill: "#ddd",
+      offsetX: 0,
+    });
+    this._display.add(timbreText);
+    this._display.add(q2Text);
+    this._display.add(q3Text);
+    this._display.add(q4Text);
+    this._display.add(q5Text);
   }
 
   // getters
