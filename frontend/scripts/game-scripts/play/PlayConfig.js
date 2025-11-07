@@ -76,17 +76,16 @@ class PlayConfig {
           ],
           callback: (features) => {
             const pitch = this.getPitch(this._dataArray);
-            console.log(
-              "Pitch:",
-              pitch,
-              "Hz",
-              "Centroid:",
-              features.spectralCentroid
-            );
+            console.log(this.normalizeFeaturesByPitch(features, pitch));
           },
         });
       })
       .catch(console.error);
+
+    this._isNoteActive = false;
+    this._prevRMS = 0;
+    this._attackTime = null;
+    this._attackThreshold = 0.02;
   }
 
   // getters and setters below
@@ -352,6 +351,46 @@ class PlayConfig {
   // stops the meyda analyzer
   stopMeydaAnalyzer() {
     this._meydaAnalyser.stop();
+  }
+
+  // normalizes meyda features by pitch
+  normalizeFeaturesByPitch(features, pitch) {
+    if (!pitch || pitch === 0) return null;
+    return {
+      ptich: pitch,
+      rms: features.rms,
+      spectralCentroid: features.spectralCentroid / pitch,
+      spectralRolloff: features.spectralRolloff / pitch,
+      spectralSlope: features.spectralSlope,
+    };
+  }
+
+  // detects the onset of a note being played
+  detectOnset(features) {
+    const rmsDiff = features.rms - this._prevRMS;
+    this._prevRMS = features.rms;
+
+    if (rmsDiff > this._attackThreshold && !this._isNoteActive) {
+      // console.log("note detected!!");
+      this._attackTime = Date.now();
+      this._isNoteActive = true;
+      return true;
+    }
+
+    return false;
+  }
+
+  // skips the attack period and collects note data across the sustain period
+  collectNoteData(features) {
+    const onset = this.detectOnset(features);
+
+    // skip attack phase (~100 ms)
+    if (this._isNoteActive && Date.now - this._attackTime > 100) {
+      // TODO: how much data should we collect?
+    }
+
+    // TODO: what to return?
+    return null;
   }
 }
 
