@@ -7,7 +7,7 @@ let scoreText = null;
 let lastPlayedNoteText = null;
 let stringText = null;
 // TODO: remove these testing variables
-let testQual1 = null;
+let scText = null;
 let testQual2 = null;
 let testQual3 = null;
 let testQual4 = null;
@@ -303,10 +303,10 @@ class Game {
     // ==================
     //   testing stuff
     // ==================
-    const timbreText = new Konva.Text({
+    scText = new Konva.Text({
       x: 600,
       y: 0,
-      text: "Timbre: " + testQual1,
+      text: "SC: ---",
       fontSize: 20,
       fontFamily: "Space Mono",
       fill: "#ddd",
@@ -348,11 +348,13 @@ class Game {
       fill: "#ddd",
       offsetX: 0,
     });
-    this._display.add(timbreText);
+    this._display.add(scText);
     this._display.add(q2Text);
     this._display.add(q3Text);
     this._display.add(q4Text);
     this._display.add(q5Text);
+
+    playConfig.startMeydaAnalyzer();
   }
 
   // getters
@@ -414,6 +416,10 @@ class Game {
   // play a plucked guitar string sound with the pitch of the current note
   pluckCurrentNote() {
     Utils.pluck(this.guitar.currentNotePitch(), pluck);
+  }
+
+  updateTests() {
+    //scText.text("SC: " + ...);
   }
 }
 

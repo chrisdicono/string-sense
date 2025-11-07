@@ -1,5 +1,6 @@
 import Utils from "../Utils.js";
 import { PitchDetector } from "https://esm.sh/pitchy@4";
+import Meyda from "https://cdn.skypack.dev/meyda";
 
 class PlayConfig {
   constructor(stage) {
@@ -56,13 +57,36 @@ class PlayConfig {
         this._bufferLength = this._analyser.fftSize;
         this._dataArray = new Float32Array(this._bufferLength);
         this._analyser.getFloatTimeDomainData(this._dataArray);
+        this._frequencyData = new Float32Array(
+          this._analyser.frequencyBinCount
+        );
 
         this._detector = PitchDetector.forFloat32Array(this._analyser.fftSize);
         this._detector.minVolumeDecibels = -20;
+
+        this._meydaAnalyser = Meyda.createMeydaAnalyzer({
+          audioContext: this._ctx,
+          source: this._source,
+          bufferSize: this._SAMPLE_RATE,
+          featureExtractors: [
+            "rms",
+            "spectralCentroid",
+            "spectralRolloff",
+            "spectralSlope",
+          ],
+          callback: (features) => {
+            const pitch = this.getPitch(this._dataArray);
+            console.log(
+              "Pitch:",
+              pitch,
+              "Hz",
+              "Centroid:",
+              features.spectralCentroid
+            );
+          },
+        });
       })
       .catch(console.error);
-
-    // other game variables can go here
   }
 
   // getters and setters below
@@ -262,6 +286,7 @@ class PlayConfig {
     this.updatePitch(this._dataArray);
   }
 
+  // TODO: finish this? don't know why this is here
   // draws the waveform with a background at the given coordinates
 
   // Use pitchy to get the pitch from the audio input
@@ -317,6 +342,16 @@ class PlayConfig {
     if (offset > 20) this._tunerBlocks[8].fill("#FCBF49ff");
     if (offset > 30) this._tunerBlocks[9].fill("#F77F00ff");
     if (offset > 40) this._tunerBlocks[10].fill("#E63946ff");
+  }
+
+  // starts the meyda analyzer
+  startMeydaAnalyzer() {
+    this._meydaAnalyser.start();
+  }
+
+  // stops the meyda analyzer
+  stopMeydaAnalyzer() {
+    this._meydaAnalyser.stop();
   }
 }
 
