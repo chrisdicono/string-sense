@@ -95,7 +95,7 @@ coming soon.**
 
 **Front-End:** JavaScript, HTML/CSS
 <br>
-**JS Libaries Used:** Web Audio API, Tone.js, pitchy, Konva.js
+**JS Libaries Used:** Web Audio API, Tone.js, pitchy, Konva.js, Meyda
 
 ## 🗒️ Acknowledgements and Notes
 
