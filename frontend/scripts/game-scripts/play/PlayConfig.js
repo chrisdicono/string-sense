@@ -76,16 +76,13 @@ class PlayConfig {
           ],
           callback: (features) => {
             this._currentFeatures = features;
-            const pitch = this.getPitch(this._dataArray);
-            const prom = this.collectNoteData(features);
-            prom.then((val) => {
-              console.log(val);
-            });
+            this.processNote(features);
           },
         });
       })
       .catch(console.error);
 
+    this._reactToNote = null;
     this._isNoteActive = false;
     this._prevRMS = 0;
     this._attackTime = null;
@@ -161,6 +158,26 @@ class PlayConfig {
     return this._dataArray;
   }
 
+  get reactToNote() {
+    return this._reactToNote;
+  }
+
+  get isNoteActive() {
+    return this._isNoteActive;
+  }
+
+  get prevRMS() {
+    return this._prevRMS;
+  }
+
+  get attackTime() {
+    return this._attackTime;
+  }
+
+  get attackThreshold() {
+    return this._attackThreshold;
+  }
+
   set initialized(value) {
     if (typeof value !== "boolean") {
       console.error("Invalid input: initialized must be set to a Boolean.");
@@ -209,6 +226,13 @@ class PlayConfig {
     }
     this._detector = newDetector;
   }
+
+  // TODO: make setters
+  // this._reactToNote = null;
+  // this._isNoteActive = false;
+  // this._prevRMS = 0;
+  // this._attackTime = null;
+  // this._attackThreshold = 0.02;
 
   pushToTunerBlocks(newNoteText) {
     if (!(newNoteText instanceof Konva.Rect)) {
@@ -415,8 +439,6 @@ class PlayConfig {
   // TODO: array turns out to be empty
   // skips the attack period and collects note data across the sustain period
   async collectNoteData(features) {
-    this.detectOnset(features);
-
     let incFeats = [];
     let incsLeft = 10;
 
@@ -425,9 +447,8 @@ class PlayConfig {
       await new Promise((resolve) => setTimeout(resolve, 50));
       console.log("Waited 50ms");
 
-      const pitch = this.getPitch(this._dataArray);
-
       while (incsLeft > 0) {
+        const pitch = this.getPitch(this._dataArray);
         const norm = this.normalizeFeaturesByPitch(
           this._currentFeatures,
           pitch
@@ -441,6 +462,18 @@ class PlayConfig {
     // console.log(incFeats);
     // return [incFeats, this.averageFeatures(incFeats)];
     return incFeats;
+  }
+
+  // encapsulates all note processing logic
+  processNote(features) {
+    if (this.detectOnset(features)) {
+      this.collectNoteData(features).then((val) => {
+        console.log(val);
+        // if (!this._reactToNote) {
+        //   this._reactToNote(val);
+        // }
+      });
+    }
   }
 }
 

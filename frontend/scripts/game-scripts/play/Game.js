@@ -279,6 +279,7 @@ class Game {
     });
 
     menuButton.on("click", () => {
+      playConfig.stopMeydaAnalyzer();
       layer.removeChildren();
       playConfig.initialized = false;
       playConfig.playState = "modes";
