@@ -75,8 +75,12 @@ class PlayConfig {
             "spectralSlope",
           ],
           callback: (features) => {
+            this._currentFeatures = features;
             const pitch = this.getPitch(this._dataArray);
-            console.log(this.normalizeFeaturesByPitch(features, pitch));
+            const prom = this.collectNoteData(features);
+            prom.then((val) => {
+              console.log(val);
+            });
           },
         });
       })
@@ -357,7 +361,7 @@ class PlayConfig {
   normalizeFeaturesByPitch(features, pitch) {
     if (!pitch || pitch === 0) return null;
     return {
-      ptich: pitch,
+      pitch: pitch,
       rms: features.rms,
       spectralCentroid: features.spectralCentroid / pitch,
       spectralRolloff: features.spectralRolloff / pitch,
@@ -367,11 +371,15 @@ class PlayConfig {
 
   // detects the onset of a note being played
   detectOnset(features) {
+    if (this._isNoteActive) {
+      return false;
+    }
+
     const rmsDiff = features.rms - this._prevRMS;
     this._prevRMS = features.rms;
 
     if (rmsDiff > this._attackThreshold && !this._isNoteActive) {
-      // console.log("note detected!!");
+      console.log("note detected!!");
       this._attackTime = Date.now();
       this._isNoteActive = true;
       return true;
@@ -380,17 +388,59 @@ class PlayConfig {
     return false;
   }
 
-  // skips the attack period and collects note data across the sustain period
-  collectNoteData(features) {
-    const onset = this.detectOnset(features);
-
-    // skip attack phase (~100 ms)
-    if (this._isNoteActive && Date.now - this._attackTime > 100) {
-      // TODO: how much data should we collect?
+  // averages an array of features from a meyda analyzer
+  averageFeatures(f) {
+    let feat = {
+      pitch: "",
+      rms: 0,
+      spectralCentroid: 0,
+      spectralRolloff: 0,
+      spectralSlope: 0,
+    };
+    for (let i = 0; i < f.length; i++) {
+      feat.pitch += f[i].pitch;
+      feat.rms += f[i].rms;
+      feat.spectralCentroid += f[i].spectralCentroid;
+      feat.spectralRolloff += f[i].spectralRolloff;
+      feat.spectralSlope += f[i].spectralSlope;
     }
+    feat.pitch /= 10;
+    feat.rms /= 10;
+    feat.spectralCentroid /= 10;
+    feat.spectralRolloff /= 10;
+    feat.spectralSlope /= 10;
+    return feat;
+  }
 
-    // TODO: what to return?
-    return null;
+  // TODO: array turns out to be empty
+  // skips the attack period and collects note data across the sustain period
+  async collectNoteData(features) {
+    this.detectOnset(features);
+
+    let incFeats = [];
+    let incsLeft = 10;
+
+    // skip attack phase (~50 ms)
+    if (this._isNoteActive) {
+      await new Promise((resolve) => setTimeout(resolve, 50));
+      console.log("Waited 50ms");
+
+      const pitch = this.getPitch(this._dataArray);
+
+      while (incsLeft > 0) {
+        const norm = this.normalizeFeaturesByPitch(
+          this._currentFeatures,
+          pitch
+        );
+        incFeats.push(norm);
+        await new Promise((resolve) => setTimeout(resolve, 100));
+        incsLeft--;
+      }
+      this._isNoteActive = false;
+    }
+    // console.log(incFeats);
+    // return [incFeats, this.averageFeatures(incFeats)];
+    return incFeats;
   }
 }
 
