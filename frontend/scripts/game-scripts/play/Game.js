@@ -355,6 +355,23 @@ class Game {
     this._display.add(q4Text);
     this._display.add(q5Text);
 
+    document.addEventListener("keydown", (event) => {
+      const pressedKey = event.key;
+
+      if (pressedKey === " ") {
+        console.log("Enter key was pressed!");
+        console.log(localStorage.getItem("e2"));
+      }
+      if (pressedKey === "Enter") {
+        console.log("Enter key was pressed!");
+        console.log(playConfig.divideLocalAverage("e2"));
+      }
+      if (pressedKey === "Backspace") {
+        console.log("Delete key was pressed!");
+        localStorage.clear();
+      }
+    });
+
     playConfig.startMeydaAnalyzer();
   }
 

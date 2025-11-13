@@ -412,40 +412,88 @@ class PlayConfig {
     return false;
   }
 
+  // adds the contents of the second given feature to the first
+  addToFeature(f, f2) {
+    f.pitch += f2.pitch;
+    f.rms += f2.rms;
+    f.spectralCentroid += f2.spectralCentroid;
+    f.spectralRolloff += f2.spectralRolloff;
+    f.spectralSlope += f2.spectralSlope;
+  }
+
+  // divides all the attributes within a feature by the given number
+  divideFeatureBy(f, i) {
+    f.pitch /= i;
+    f.rms /= i;
+    f.spectralCentroid /= i;
+    f.spectralRolloff /= i;
+    f.spectralSlope /= i;
+  }
+
   // averages an array of features from a meyda analyzer
   averageFeatures(f) {
     let feat = {
-      pitch: "",
+      pitch: 0,
       rms: 0,
       spectralCentroid: 0,
       spectralRolloff: 0,
       spectralSlope: 0,
     };
     for (let i = 0; i < f.length; i++) {
-      feat.pitch += f[i].pitch;
-      feat.rms += f[i].rms;
-      feat.spectralCentroid += f[i].spectralCentroid;
-      feat.spectralRolloff += f[i].spectralRolloff;
-      feat.spectralSlope += f[i].spectralSlope;
+      try {
+        this.addToFeature(feat, f[i]);
+      } catch (error) {
+        console.log(error);
+        return null;
+      }
     }
-    feat.pitch /= 10;
-    feat.rms /= 10;
-    feat.spectralCentroid /= 10;
-    feat.spectralRolloff /= 10;
-    feat.spectralSlope /= 10;
+    this.divideFeatureBy(feat, f.length);
     return feat;
   }
 
-  // TODO: array turns out to be empty
+  // adds note features to a local average
+  // KEEP!! can be used for profiling a specific guitar
+  addToLocalAverage(key, features) {
+    let noteAvg = JSON.parse(localStorage.getItem(key));
+    if (!noteAvg || noteAvg.pitch === null) {
+      noteAvg = {
+        pitch: 0,
+        rms: 0,
+        spectralCentroid: 0,
+        spectralRolloff: 0,
+        spectralSlope: 0,
+      };
+    }
+    this.addToFeature(noteAvg, features);
+    let noteAvgTotal = Number(localStorage.getItem(key + "_total"));
+    if (!noteAvgTotal) {
+      noteAvgTotal = 0;
+    }
+    noteAvgTotal++;
+    localStorage.setItem(key, JSON.stringify(noteAvg));
+    localStorage.setItem(key + "_total", noteAvgTotal);
+  }
+
+  // divides all added feature values together to get an average value
+  // KEEP!! can be used for profiling a specific guitar
+  divideLocalAverage(key) {
+    let noteAvg = JSON.parse(localStorage.getItem(key));
+    if (!noteAvg || noteAvg === null) return null;
+    let noteAvgTotal = Number(localStorage.getItem(key + "_total"));
+    this.divideFeatureBy(noteAvg, noteAvgTotal);
+    return noteAvg;
+  }
+
   // skips the attack period and collects note data across the sustain period
   async collectNoteData(features) {
     let incFeats = [];
     let incsLeft = 10;
 
     // skip attack phase (~50 ms)
+    const skipAttack = 50;
     if (this._isNoteActive) {
-      await new Promise((resolve) => setTimeout(resolve, 50));
-      console.log("Waited 50ms");
+      await new Promise((resolve) => setTimeout(resolve, skipAttack));
+      console.log(`Waited ${skipAttack}ms`);
 
       while (incsLeft > 0) {
         const pitch = this.getPitch(this._dataArray);
@@ -460,8 +508,15 @@ class PlayConfig {
       this._isNoteActive = false;
     }
     // console.log(incFeats);
+    const avg = this.averageFeatures(incFeats);
+    if (avg === null) {
+      console.error("Note processing failed.");
+      return null;
+    }
+    //console.log(JSON.stringify(avg));
+    this.addToLocalAverage("e2", avg);
+    return avg;
     // return [incFeats, this.averageFeatures(incFeats)];
-    return incFeats;
   }
 
   // encapsulates all note processing logic
