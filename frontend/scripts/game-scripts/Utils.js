@@ -6,6 +6,39 @@ Utility functions for the game.
 */
 class Utils {
   /*
+    Formats a detected note's string and fret to be processed for identification.
+    */
+  static formatStringAndFret(str, fret) {
+    let formattedString = "";
+    switch (str) {
+      case 0:
+        formattedString = "lowE";
+        break;
+      case 1:
+        formattedString = "A";
+        break;
+      case 2:
+        formattedString = "D";
+        break;
+      case 3:
+        formattedString = "G";
+        break;
+      case 4:
+        formattedString = "B";
+        break;
+      case 5:
+        formattedString = "highE";
+        break;
+      default:
+        return null;
+    }
+    if (fret >= 0 && fret <= 12) {
+      return formattedString + "_" + fret;
+    }
+    return null;
+  }
+
+  /*
     Calculates the amount of cents off a note is from a target pitch.
     */
   static calculateCentsOff(frequency) {
