@@ -51,6 +51,10 @@ class PlayConfig {
       .then((stream) => {
         this._source = this._ctx.createMediaStreamSource(stream);
         this._source.connect(this._analyser);
+        this._monitorStream = stream.clone();
+        this._monitorCtx = new (window.AudioContext ||
+          window.webkitAudioContext)();
+        this._monitorSource = this._monitorCtx.createMediaStreamSource(stream);
 
         // record current audio info
         this._analyser.fftSize = this._SAMPLE_RATE;
@@ -250,23 +254,23 @@ class PlayConfig {
     }
   }
 
-  // Toggle microphone testing (connect/disconnect analyser to destination)
+  // Toggle microphone testing (connect/disconnect monitor source to destination)
   toggleTestMic() {
     try {
+      if (!this._monitorCtx || !this._monitorSource) {
+        alert("Microphone not initialized yet.");
+        return;
+      }
       switch (this._testing) {
         case false:
-          this._analyser.connect(this._ctx.destination);
+          this._monitorSource.connect(this._monitorCtx.destination);
           this._testing = true;
           alert("testing");
           break;
         case true:
-          this._analyser.disconnect(this._ctx.destination);
+          this._monitorSource.disconnect(this._monitorCtx.destination);
           this._testing = false;
           alert("not testing");
-          break;
-        default:
-          alert("hello");
-          console.warn(`Unexpected state for bool 'testing', ${this._testing}`);
           break;
       }
     } catch (e) {
