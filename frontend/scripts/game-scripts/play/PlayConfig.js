@@ -78,8 +78,13 @@ class PlayConfig {
             "spectralCentroid",
             "spectralRolloff",
             "spectralSlope",
+            "spectralFlatness",
+            "spectralSpread",
+            "perceptualSpread",
+            "perceptualSharpness",
           ],
           callback: (features) => {
+            if (!this._meydaActive) this._meydaActive = true;
             this._currentFeatures = features;
             this.processNote(features);
           },
@@ -377,24 +382,43 @@ class PlayConfig {
   }
 
   // starts the meyda analyzer
-  startMeydaAnalyzer() {
+  async startMeydaAnalyzer() {
+    if (this._meydaActive) return;
+    while (!this._ctx || !this._source) {
+      await new Promise((resolve) => setTimeout(resolve, 10));
+    }
     this._meydaAnalyser.start();
   }
 
   // stops the meyda analyzer
   stopMeydaAnalyzer() {
     this._meydaAnalyser.stop();
+    this._meydaActive = false;
+  }
+
+  // normalizes the value using minMax
+  minMaxNorm(val, min, max) {
+    return (val - min) / (max - min);
   }
 
   // normalizes meyda features by pitch
-  normalizeFeaturesByPitch(features, pitch) {
+  normalizeFeatures(features, pitch) {
     if (!pitch || pitch === 0) return null;
     return {
       pitch: pitch,
       rms: features.rms,
-      spectralCentroid: features.spectralCentroid / pitch,
-      spectralRolloff: features.spectralRolloff / pitch,
+      spectralCentroid: this.minMaxNorm(features.spectralCentroid, 0, 1024),
+      spectralRolloff: this.minMaxNorm(
+        features.spectralRolloff,
+        0,
+        this._ctx.sampleRate / 2
+      ),
       spectralSlope: features.spectralSlope,
+      spectralFlatness: features.spectralFlatness,
+      spectralSpread: this.minMaxNorm(features.spectralSpread, 0, 1024),
+      perceptualSpread: features.perceptualSpread,
+      perceptualSharpness: features.perceptualSharpness,
+      // crest, skewness, flux (0 - no limit) ----- standardize???
     };
   }
 
@@ -424,6 +448,10 @@ class PlayConfig {
     f.spectralCentroid += f2.spectralCentroid;
     f.spectralRolloff += f2.spectralRolloff;
     f.spectralSlope += f2.spectralSlope;
+    f.spectralFlatness += f2.spectralFlatness;
+    f.spectralSpread += f2.spectralSpread;
+    f.perceptualSpread += f2.perceptualSpread;
+    f.perceptualSharpness += f2.perceptualSharpness;
   }
 
   // divides all the attributes within a feature by the given number
@@ -433,6 +461,10 @@ class PlayConfig {
     f.spectralCentroid /= i;
     f.spectralRolloff /= i;
     f.spectralSlope /= i;
+    f.spectralFlatness /= i;
+    f.spectralSpread /= i;
+    f.perceptualSpread /= i;
+    f.perceptualSharpness /= i;
   }
 
   // averages an array of features from a meyda analyzer
@@ -443,6 +475,10 @@ class PlayConfig {
       spectralCentroid: 0,
       spectralRolloff: 0,
       spectralSlope: 0,
+      spectralFlatness: 0,
+      spectralSpread: 0,
+      perceptualSpread: 0,
+      perceptualSharpness: 0,
     };
     for (let i = 0; i < f.length; i++) {
       try {
@@ -467,6 +503,10 @@ class PlayConfig {
         spectralCentroid: 0,
         spectralRolloff: 0,
         spectralSlope: 0,
+        spectralFlatness: 0,
+        spectralSpread: 0,
+        perceptualSpread: 0,
+        perceptualSharpness: 0,
       };
     }
     this.addToFeature(noteAvg, features);
@@ -502,10 +542,7 @@ class PlayConfig {
 
       while (incsLeft > 0) {
         const pitch = this.getPitch(this._dataArray);
-        const norm = this.normalizeFeaturesByPitch(
-          this._currentFeatures,
-          pitch
-        );
+        const norm = this.normalizeFeatures(this._currentFeatures, pitch);
         incFeats.push(norm);
         await new Promise((resolve) => setTimeout(resolve, 100));
         incsLeft--;
@@ -525,35 +562,63 @@ class PlayConfig {
   }
 
   featureDistance(a, b) {
+    console.log(
+      `Centroid: ${Math.pow(a.spectralCentroid - b.spectralCentroid, 2)}`
+    );
+    console.log(
+      `Rollof: ${Math.pow(a.spectralRolloff - b.spectralRolloff, 2)}`
+    );
+    console.log(`Slope: ${Math.pow(a.spectralSlope - b.spectralSlope, 2)}`);
+    console.log(
+      `Flatness: ${Math.pow(a.spectralFlatness - b.spectralFlatness, 2)}`
+    );
+    console.log(
+      `Per. Spread: ${Math.pow(a.perceptualSpread - b.perceptualSpread, 2)}`
+    );
+    console.log(
+      `Per. Sharpness: ${Math.pow(
+        a.perceptualSharpness - b.perceptualSharpness,
+        2
+      )}`
+    );
     return Math.sqrt(
-      Math.pow(a.rms - b.rms, 2) +
-        Math.pow(a.spectralCentroid - b.spectralCentroid, 2) // +
-      //Math.pow(a.spectralRolloff - b.spectralRolloff, 2) +
-      //Math.pow(a.spectralSlope - b.spectralSlope, 2)
+      Math.pow(a.spectralCentroid - b.spectralCentroid, 2) +
+        Math.pow(a.spectralRolloff - b.spectralRolloff, 2) +
+        Math.pow(a.spectralSlope - b.spectralSlope, 2) +
+        Math.pow(a.spectralFlatness - b.spectralFlatness, 2) +
+        Math.pow(a.spectralSpread - b.spectralSpread, 2) +
+        Math.pow(a.perceptualSpread - b.perceptualSpread, 2) +
+        Math.pow(a.perceptualSharpness - b.perceptualSharpness, 2)
     );
   }
 
   mostSimilarFeatures(features) {
-    console.log(features.pitch.toFixed(2));
-    const note = Utils.getNoteFromFreq(features.pitch.toFixed(2));
+    const featFreq = features.pitch.toFixed(2);
+    console.log(featFreq);
+    const note = Utils.getNoteFromFreq(featFreq);
     console.log(note);
     const eqNotes = noteFretFeatures.filter((item) => item.note === note);
-    const inpFeats = {
-      rms: features.rms,
-      spectralCentroid: features.spectralCentroid,
-      spectralRolloff: features.spectralRolloff,
-      spectralSlope: features.spectralSlope,
-    };
+    const inpFeats = this.normalizeFeatures(features, featFreq);
+    // console.log(inpFeats);
     let minDistance = Number.MAX_VALUE;
     let minDistancePoint = null;
     for (let i = 0; i < eqNotes.length; i++) {
+      // console.log(eqNotes[i]);
       const iterFeats = {
         rms: eqNotes[i].rms,
         spectralCentroid: eqNotes[i].spectralCentroid,
         spectralRolloff: eqNotes[i].spectralRolloff,
         spectralSlope: eqNotes[i].spectralSlope,
+        spectralFlatness: eqNotes[i].spectralFlatness,
+        spectralSpread: eqNotes[i].spectralSpread,
+        perceptualSpread: eqNotes[i].perceptualSpread,
+        perceptualSharpness: eqNotes[i].perceptualSharpness,
       };
-      const tempDist = this.featureDistance(inpFeats, iterFeats);
+      const normIter = this.normalizeFeatures(iterFeats, featFreq);
+      const tempDist = this.featureDistance(inpFeats, normIter);
+      console.log(
+        `Distance to ${eqNotes[i].string}_${eqNotes[i].fret}: ${tempDist}`
+      );
       if (tempDist < minDistance) {
         minDistance = tempDist;
         minDistancePoint = eqNotes[i];

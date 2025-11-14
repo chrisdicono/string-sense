@@ -359,7 +359,7 @@ class Game {
       const pressedKey = event.key;
 
       if (pressedKey === " ") {
-        console.log("Enter key was pressed!");
+        console.log("Space was pressed!");
         console.log(localStorage.getItem("e2"));
       }
       if (pressedKey === "Enter") {
