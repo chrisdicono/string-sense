@@ -370,6 +370,11 @@ class Game {
         console.log("Delete key was pressed!");
         localStorage.clear();
       }
+      if (pressedKey === "q") {
+        console.log("Removing last feature!");
+        playConfig.subMostRecentFeature();
+        console.log(localStorage.getItem("e2_count"));
+      }
     });
 
     playConfig.startMeydaAnalyzer();

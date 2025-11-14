@@ -452,6 +452,16 @@ class PlayConfig {
     f.spectralSpread += f2.spectralSpread;
     f.perceptualSpread += f2.perceptualSpread;
     f.perceptualSharpness += f2.perceptualSharpness;
+    // for subtracting values if needed
+    localStorage.setItem("mostRecentPitch", f2.pitch);
+    localStorage.setItem("mostRecentRms", f2.rms);
+    localStorage.setItem("mostRecentCentroid", f2.spectralCentroid);
+    localStorage.setItem("mostRecentRolloff", f2.spectralRolloff);
+    localStorage.setItem("mostRecentSlope", f2.spectralSlope);
+    localStorage.setItem("mostRecentFlatness", f2.spectralFlatness);
+    localStorage.setItem("mostRecentSpread", f2.spectralSpread);
+    localStorage.setItem("mostRecentPerSpread", f2.perceptualSpread);
+    localStorage.setItem("mostRecentPerSharpness", f2.perceptualSharpness);
   }
 
   // divides all the attributes within a feature by the given number
@@ -527,6 +537,40 @@ class PlayConfig {
     let noteAvgTotal = Number(localStorage.getItem(key + "_total"));
     this.divideFeatureBy(noteAvg, noteAvgTotal);
     return noteAvg;
+  }
+
+  // subtracts the most recent feature details from the accumulated feature
+  subMostRecentFeature() {
+    let noteAvg = JSON.parse(localStorage.getItem("e2"));
+    if (!noteAvg || noteAvg.pitch === null) {
+      return;
+    }
+    noteAvg.pitch -= Number(localStorage.getItem("mostRecentPitch"));
+    noteAvg.rms -= Number(localStorage.getItem("mostRecentRms"));
+    noteAvg.spectralCentroid -= Number(
+      localStorage.getItem("mostRecentCentroid")
+    );
+    noteAvg.spectralRolloff -= Number(
+      localStorage.getItem("mostRecentRolloff")
+    );
+    noteAvg.spectralSlope -= Number(localStorage.getItem("mostRecentSlope"));
+    noteAvg.spectralFlatness -= Number(
+      localStorage.getItem("mostRecentFlatness")
+    );
+    noteAvg.spectralSpread -= Number(localStorage.getItem("mostRecentSpread"));
+    noteAvg.perceptualSpread -= Number(
+      localStorage.getItem("mostRecentPerSpread")
+    );
+    noteAvg.perceptualSharpness -= Number(
+      localStorage.getItem("mostRecentPerSharpness")
+    );
+    let noteAvgTotal = Number(localStorage.getItem("e2_total"));
+    if (!noteAvgTotal || noteAvgTotal <= 0) {
+      return;
+    }
+    noteAvgTotal--;
+    localStorage.setItem("e2", JSON.stringify(noteAvg));
+    localStorage.setItem("e2_total", noteAvgTotal);
   }
 
   // skips the attack period and collects note data across the sustain period
