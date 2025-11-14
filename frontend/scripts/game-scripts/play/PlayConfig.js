@@ -1,6 +1,7 @@
 import Utils from "../Utils.js";
 import { PitchDetector } from "https://esm.sh/pitchy@4";
 import Meyda from "https://cdn.skypack.dev/meyda";
+import noteFretFeatures from "../noteFretFeatures.js";
 
 class PlayConfig {
   constructor(stage) {
@@ -523,11 +524,51 @@ class PlayConfig {
     // return [incFeats, this.averageFeatures(incFeats)];
   }
 
+  featureDistance(a, b) {
+    return Math.sqrt(
+      Math.pow(a.rms - b.rms, 2) +
+        Math.pow(a.spectralCentroid - b.spectralCentroid, 2) // +
+      //Math.pow(a.spectralRolloff - b.spectralRolloff, 2) +
+      //Math.pow(a.spectralSlope - b.spectralSlope, 2)
+    );
+  }
+
+  mostSimilarFeatures(features) {
+    console.log(features.pitch.toFixed(2));
+    const note = Utils.getNoteFromFreq(features.pitch.toFixed(2));
+    console.log(note);
+    const eqNotes = noteFretFeatures.filter((item) => item.note === note);
+    const inpFeats = {
+      rms: features.rms,
+      spectralCentroid: features.spectralCentroid,
+      spectralRolloff: features.spectralRolloff,
+      spectralSlope: features.spectralSlope,
+    };
+    let minDistance = Number.MAX_VALUE;
+    let minDistancePoint = null;
+    for (let i = 0; i < eqNotes.length; i++) {
+      const iterFeats = {
+        rms: eqNotes[i].rms,
+        spectralCentroid: eqNotes[i].spectralCentroid,
+        spectralRolloff: eqNotes[i].spectralRolloff,
+        spectralSlope: eqNotes[i].spectralSlope,
+      };
+      const tempDist = this.featureDistance(inpFeats, iterFeats);
+      if (tempDist < minDistance) {
+        minDistance = tempDist;
+        minDistancePoint = eqNotes[i];
+      }
+    }
+    return minDistancePoint;
+  }
+
   // encapsulates all note processing logic
   processNote(features) {
     if (this.detectOnset(features)) {
       this.collectNoteData(features).then((val) => {
         console.log(val);
+        console.log(localStorage.getItem("e2_total"));
+        console.log(this.mostSimilarFeatures(val));
         // if (!this._reactToNote) {
         //   this._reactToNote(val);
         // }

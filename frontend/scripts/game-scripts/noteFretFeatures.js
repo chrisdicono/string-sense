@@ -13,28 +13,52 @@ const noteFretFeatures = [
     note: "F2",
     string: "0",
     fret: "1",
-    pitch: 0,
-    rms: 0,
-    spectralCentroid: 0,
-    spectralRolloff: 0,
-    spectralSlope: 0,
+    pitch: 87.74195227938591,
+    rms: 0.05679196539575715,
+    spectralCentroid: 0.1941568538714114,
+    spectralRolloff: 17.655798015209715,
+    spectralSlope: 8.582137855103305e-8,
   },
+  {
+    note: "E3",
+    string: "0",
+    fret: "12",
+    pitch: 166.27369705397797,
+    rms: 0.08656485094544236,
+    spectralCentroid: 0.08774213963394085,
+    spectralRolloff: 9.179306870812429,
+    spectralSlope: 8.59578961255981e-8,
+  },
+  {
+    note: "E3",
+    string: "1",
+    fret: "7",
+    pitch: 165.60264261963826,
+    rms: 0.09280755355151593,
+    spectralCentroid: 0.13506119651229276,
+    spectralRolloff: 9.118637371780457,
+    spectralSlope: 8.561561167167345e-8,
+  },
+  {
+    note: "E3",
+    string: "2",
+    fret: "2",
+    pitch: 165.2171365823077,
+    rms: 0.0850169520486944,
+    spectralCentroid: 0.16328846618580498,
+    spectralRolloff: 9.33458630168274,
+    spectralSlope: 8.495697165570534e-8,
+  },
+  // {
+  //   note: "F#2",
+  //   string: "0",
+  //   fret: "2",
+  //   pitch: ...,
+  //   rms: ...,
+  //   spectralCentroid: ...,
+  //   spectralRolloff: ...,
+  //   spectralSlope: ...,
+  // },
 ];
 
-// {
-//   note: "F#2",
-//   string: "0",
-//   fret: "2",
-//   pitch: ...,
-//   rms: ...,
-//   spectralCentroid: ...,
-//   spectralRolloff: ...,
-//   spectralSlope: ...,
-// },
-
-const mostSimilarFeatures = (features) => {
-  // scan file for most similar features
-  // and output key value
-};
-
-export { noteFretFeatures, mostSimilarFeatures };
+export default noteFretFeatures;

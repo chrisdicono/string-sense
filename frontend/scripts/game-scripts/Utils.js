@@ -5,6 +5,19 @@ import { freqs440 } from "./note-freqs.js";
 Utility functions for the game.
 */
 class Utils {
+  static getNoteFromFreq(freq) {
+    let closestKey = null;
+    let minDiff = Number.MAX_VALUE;
+    freqs440.forEach((value, key) => {
+      const diff = Math.abs(freq - value);
+      if (diff < minDiff) {
+        minDiff = diff;
+        closestKey = key;
+      }
+    });
+    return closestKey;
+  }
+
   /*
     Formats a detected note's string and fret to be processed for identification.
     */
