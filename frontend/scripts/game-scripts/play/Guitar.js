@@ -45,7 +45,7 @@ class Guitar {
     }
     this._worstNotes = new Map();
     this._bestNotes = new Map();
-    let strings = [];
+    this._strings = [];
     let fretPositions = [];
     this._fretNumbers = [];
     this._numbersHidden = true;
@@ -66,23 +66,6 @@ class Guitar {
       cornerRadius: cornerRadius,
     });
     this._fretboardDisplay.add(this.fretboardBackground);
-    // create and add strings
-    for (let i = 0; i <= 5; i++) {
-      let stringY = fretboardY + fretboardHeight - i * stringSpacing;
-      let stringStart = fretboardX;
-      let stringEnd = fretboardX + fretboardWidth;
-      if (i == 0 || i == 5) {
-        stringStart += cornerRadius;
-        stringEnd -= cornerRadius;
-      }
-      let tempString = new Konva.Line({
-        points: [stringStart, stringY, stringEnd, stringY],
-        stroke: "#ddd",
-        strokeWidth: 4 - i * 0.5,
-      });
-      strings.push(tempString);
-      this._fretboardDisplay.add(strings[i]);
-    }
     // create and add frets
     for (let i = 0; i <= numFrets; i++) {
       const position = 2 * fretboardWidth * (1 - Math.pow(2, -i / 12));
@@ -104,6 +87,23 @@ class Guitar {
         strokeWidth: 3,
       });
       this._fretboardDisplay.add(fret);
+    }
+    // create and add strings
+    for (let i = 0; i <= 5; i++) {
+      let stringY = fretboardY + fretboardHeight - i * stringSpacing;
+      let stringStart = fretboardX;
+      let stringEnd = fretboardX + fretboardWidth;
+      if (i == 0 || i == 5) {
+        stringStart += cornerRadius;
+        stringEnd -= cornerRadius;
+      }
+      let tempString = new Konva.Line({
+        points: [stringStart, stringY, stringEnd, stringY],
+        stroke: "#ddd",
+        strokeWidth: 4 - i * 0.5,
+      });
+      this._strings.push(tempString);
+      this._fretboardDisplay.add(this._strings[i]);
     }
     // create and add fret markers and numbers
     let markerNums = [3, 5, 7, 9, 12, 15, 17, 19, 21, 24];
@@ -197,14 +197,19 @@ class Guitar {
     return this._notes;
   }
 
-  // returns the current note's pitch and string
+  // returns the current note's pitch
   currentNotePitch() {
     return this._currentNote.pitch;
   }
 
-  // returns the current note's pitch and string
+  // returns the current note's string
   currentNoteString() {
     return this._currentNote.string;
+  }
+
+  // returns the current note's fret
+  currentNoteFret() {
+    return this._currentNote.fret;
   }
 
   // returns the current note's pitch and string
@@ -242,42 +247,64 @@ class Guitar {
 
   // animates and briefly displays a note that is either correct or incorrect
   animateNoteSelection(string, fret, isCorrect) {
-    let note = this.notes[string][fret];
-    isCorrect ? note.fill("#2f9e4cff") : note.fill("#b23636ff");
-    const fadeIn = new Konva.Tween({
-      node: note,
-      duration: 0.3,
-      opacity: 1,
-      easing: Konva.Easings.EaseOut,
-      onFinish: () => {
-        const fadeOut = new Konva.Tween({
-          node: note,
-          duration: 0.3,
-          opacity: 0,
-          easing: Konva.Easings.EaseOut,
-        });
-        setTimeout(() => fadeOut.play(), 1500);
-      },
-    });
-    const popIn1 = new Konva.Tween({
-      node: note,
-      duration: 0.1,
-      scaleX: 1.2,
-      scaleY: 1.2,
-      easing: Konva.Easings.EaseOut,
-      onFinish: () => {
-        const popIn2 = new Konva.Tween({
-          node: note,
-          duration: 0.5,
-          scaleX: 1,
-          scaleY: 1,
-          easing: Konva.Easings.EaseOut,
-        });
-        popIn2.play();
-      },
-    });
-    fadeIn.play();
-    popIn1.play();
+    if (fret > 0) {
+      let note = this.notes[string][fret - 1];
+      isCorrect ? note.fill("#2f9e4cff") : note.fill("#b23636ff");
+      const fadeIn = new Konva.Tween({
+        node: note,
+        duration: 0.3,
+        opacity: 1,
+        easing: Konva.Easings.EaseOut,
+        onFinish: () => {
+          const fadeOut = new Konva.Tween({
+            node: note,
+            duration: 0.3,
+            opacity: 0,
+            easing: Konva.Easings.EaseOut,
+          });
+          setTimeout(() => fadeOut.play(), 1500);
+        },
+      });
+      const popIn1 = new Konva.Tween({
+        node: note,
+        duration: 0.1,
+        scaleX: 1.2,
+        scaleY: 1.2,
+        easing: Konva.Easings.EaseOut,
+        onFinish: () => {
+          const popIn2 = new Konva.Tween({
+            node: note,
+            duration: 0.5,
+            scaleX: 1,
+            scaleY: 1,
+            easing: Konva.Easings.EaseOut,
+          });
+          popIn2.play();
+        },
+      });
+      fadeIn.play();
+      popIn1.play();
+    } else if (fret == 0) {
+      let tempString = this._strings[string];
+      const color = isCorrect ? "#2f9e4cff" : "#b23636ff";
+      tempString.stroke(color);
+      const fadeIn = new Konva.Tween({
+        node: tempString,
+        duration: 0.3,
+        stroke: color,
+        easing: Konva.Easings.EaseOut,
+        onFinish: () => {
+          const fadeOut = new Konva.Tween({
+            node: tempString,
+            duration: 0.3,
+            stroke: "#ddd",
+            easing: Konva.Easings.EaseOut,
+          });
+          setTimeout(() => fadeOut.play(), 1500);
+        },
+      });
+      fadeIn.play();
+    }
   }
 
   // adds a note to the given heatmap, and appends the count if it already exists
@@ -316,6 +343,11 @@ class Note {
   get pitch() {
     return this._pitch;
   }
+
+  // others
+  // toTuple() {
+  //   return [this._string, this._fret];
+  // }
 }
 
 export default Guitar;

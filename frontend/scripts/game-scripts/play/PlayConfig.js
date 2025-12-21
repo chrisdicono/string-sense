@@ -86,7 +86,7 @@ class PlayConfig {
           callback: (features) => {
             if (!this._meydaActive) this._meydaActive = true;
             this._currentFeatures = features;
-            this.processNote(features);
+            this.processNote(features); // uses reactToNote callback
           },
         });
       })
@@ -671,16 +671,26 @@ class PlayConfig {
     return minDistancePoint;
   }
 
+  setReactToNoteCB(callback) {
+    this._reactToNote = callback;
+  }
+
   // encapsulates all note processing logic
   processNote(features) {
     if (this.detectOnset(features)) {
       this.collectNoteData(features).then((val) => {
         console.log(val);
         console.log(localStorage.getItem("e2_total"));
-        console.log(this.mostSimilarFeatures(val));
-        // if (!this._reactToNote) {
-        //   this._reactToNote(val);
-        // }
+        const mostSimilar = this.mostSimilarFeatures(val);
+        const guessedNote = {
+          note: mostSimilar.note,
+          string: mostSimilar.string,
+          fret: mostSimilar.fret,
+        };
+        console.log(guessedNote);
+        if (this._reactToNote) {
+          this._reactToNote(guessedNote);
+        }
       });
     }
   }

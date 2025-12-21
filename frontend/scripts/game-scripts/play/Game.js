@@ -301,60 +301,6 @@ class Game {
     this._guitar.newRandomNote();
     this.updateTarget();
 
-    // ==================
-    //   testing stuff
-    // ==================
-    scText = new Konva.Text({
-      x: 600,
-      y: 0,
-      text: "SC: ---",
-      fontSize: 20,
-      fontFamily: "Space Mono",
-      fill: "#ddd",
-      offsetX: 0,
-    });
-    const q2Text = new Konva.Text({
-      x: 600,
-      y: 20,
-      text: "Qual 2: " + testQual2,
-      fontSize: 20,
-      fontFamily: "Space Mono",
-      fill: "#ddd",
-      offsetX: 0,
-    });
-    const q3Text = new Konva.Text({
-      x: 600,
-      y: 40,
-      text: "Qual 3: " + testQual3,
-      fontSize: 20,
-      fontFamily: "Space Mono",
-      fill: "#ddd",
-      offsetX: 0,
-    });
-    const q4Text = new Konva.Text({
-      x: 600,
-      y: 60,
-      text: "Qual 4: " + testQual4,
-      fontSize: 20,
-      fontFamily: "Space Mono",
-      fill: "#ddd",
-      offsetX: 0,
-    });
-    const q5Text = new Konva.Text({
-      x: 600,
-      y: 80,
-      text: "Qual 5: " + testQual5,
-      fontSize: 20,
-      fontFamily: "Space Mono",
-      fill: "#ddd",
-      offsetX: 0,
-    });
-    this._display.add(scText);
-    this._display.add(q2Text);
-    this._display.add(q3Text);
-    this._display.add(q4Text);
-    this._display.add(q5Text);
-
     document.addEventListener("keydown", (event) => {
       const pressedKey = event.key;
 
@@ -376,6 +322,8 @@ class Game {
         console.log(localStorage.getItem("e2_count"));
       }
     });
+
+    playConfig.setReactToNoteCB((note) => this.selectionLogic(note));
 
     playConfig.startMeydaAnalyzer();
   }
@@ -412,10 +360,15 @@ class Game {
     return this._guitar.currentNoteString();
   }
 
+  // returns the current target note's fret
+  guitarFret() {
+    return this._guitar.currentNoteFret();
+  }
+
   // increment score and total rounds by one (in case of correct choice)
   incrementScoreAndRound() {
     this._score += 1;
-    this.totalRounds += 1;
+    this._totalRounds += 1;
   }
 
   // increment only total rounds (in case of incorrect choice)
@@ -441,8 +394,23 @@ class Game {
     Utils.pluck(this.guitar.currentNotePitch(), pluck);
   }
 
-  updateTests() {
-    //scText.text("SC: " + ...);
+  selectionLogic(selectedNote) {
+    // if incorrect selection, increment # of notes if not done once already
+    // also add to heatmap/other features
+    // if correct, add 1 if first try, else move on to next note
+    // heatmap/other as well
+    console.log("hi");
+    console.log(this.guitarString());
+    console.log(this.guitarFret());
+    const correctness =
+      selectedNote.string == this.guitarString() &&
+      selectedNote.fret == this.guitarFret();
+    console.log(correctness);
+    this.guitar.animateNoteSelection(
+      selectedNote.string,
+      selectedNote.fret,
+      correctness
+    );
   }
 }
 
