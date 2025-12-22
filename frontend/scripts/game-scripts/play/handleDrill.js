@@ -14,7 +14,6 @@ function handleDrill(primaryLayer, stage, newState, playConfig) {
     guitar = game.guitar;
     primaryLayer.add(game.display);
     primaryLayer.draw();
-    setTimeout(() => game.pluckCurrentNote(), 750);
 
     playConfig.initialized = true;
   }
