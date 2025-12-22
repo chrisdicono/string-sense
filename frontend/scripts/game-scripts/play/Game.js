@@ -6,12 +6,6 @@ let noteText = null;
 let scoreText = null;
 let lastPlayedNoteText = null;
 let stringText = null;
-// TODO: remove these testing variables
-let scText = null;
-let testQual2 = null;
-let testQual3 = null;
-let testQual4 = null;
-let testQual5 = null;
 let pluck = Utils.initiializePluck();
 
 class Game {
@@ -27,8 +21,7 @@ class Game {
 
     this._score = 0;
     this._firstTry = true;
-    this._totalRounds = 1;
-    this._mostRecentNote = "-";
+    this._totalRounds = 0;
 
     const scoreLabel = new Konva.Text({
       x: 202,
@@ -66,7 +59,7 @@ class Game {
     lastPlayedNoteText = new Konva.Text({
       x: 555,
       y: 45,
-      text: this._mostRecentNote,
+      text: "-",
       fontSize: 40,
       fontFamily: "DynaPuff",
       fill: "#ddd",
@@ -365,13 +358,12 @@ class Game {
     return this._guitar.currentNoteFret();
   }
 
-  // increment score and total rounds by one (in case of correct choice)
-  incrementScoreAndRound() {
+  // increment score by one
+  incrementScore() {
     this._score += 1;
-    this._totalRounds += 1;
   }
 
-  // increment only total rounds (in case of incorrect choice)
+  // increment only total rounds
   incrementRound() {
     this._totalRounds += 1;
   }
@@ -389,16 +381,22 @@ class Game {
     stringText.text(string + 1);
   }
 
+  // updates the score of the current session
+  updateScore() {
+    scoreText.text(this._score + " / " + this._totalRounds);
+  }
+
   // play a plucked guitar string sound with the pitch of the current note
   pluckCurrentNote() {
     Utils.pluck(this.guitar.currentNotePitch(), pluck);
   }
 
+  // sets the current note to a new random note
+  newRandomNote() {
+    this._guitar.newRandomNote();
+  }
+
   selectionLogic(selectedNote) {
-    // if incorrect selection, increment # of notes if not done once already
-    // also add to heatmap/other features
-    // if correct, add 1 if first try, else move on to next note
-    // heatmap/other as well
     console.log("hi");
     console.log(this.guitarString());
     console.log(this.guitarFret());
@@ -411,6 +409,26 @@ class Game {
       selectedNote.fret,
       correctness
     );
+    if (correctness) {
+      this.incrementRound();
+      if (this._firstTry) this.incrementScore();
+      this.newRandomNote();
+      this.updateTarget();
+      this.updateScore();
+      this._firstTry = true;
+
+      // add to heatmap
+    } else {
+      if (this._firstTry) this._firstTry = false;
+    }
+    lastPlayedNoteText.text(selectedNote.note);
+    this._dispLayer.draw();
+    console.log("================");
+    console.log(this._score);
+    console.log(this._totalRounds);
+    console.log(this._firstTry);
+
+    // add to heatmap
   }
 }
 

@@ -20,7 +20,6 @@ function handleDrill(primaryLayer, stage, newState, playConfig) {
   }
 
   game.updateWaveform();
-  // trigger selectionLogic() with callback function
 }
 
 export default handleDrill;

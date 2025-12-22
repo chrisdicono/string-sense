@@ -89,6 +89,6 @@ highE.set(10, "D5");
 highE.set(11, "D#5");
 highE.set(12, "E5");
 
-const locationToNote = [lowE, aStr, dStr, gStr, bStr, highE];
+let locationToNote = [lowE, aStr, dStr, gStr, bStr, highE];
 
 export default locationToNote;
