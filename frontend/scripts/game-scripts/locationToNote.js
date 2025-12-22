@@ -90,5 +90,6 @@ highE.set(11, "D#5");
 highE.set(12, "E5");
 
 let locationToNote = [lowE, aStr, dStr, gStr, bStr, highE];
+// locationToNote = locationToNote.reverse();
 
 export default locationToNote;

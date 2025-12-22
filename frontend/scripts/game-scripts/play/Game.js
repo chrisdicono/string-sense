@@ -318,6 +318,8 @@ class Game {
 
     playConfig.setReactToNoteCB((note) => this.selectionLogic(note));
 
+    setTimeout(() => this.pluckCurrentNote(), 300);
+
     playConfig.startMeydaAnalyzer();
   }
 
@@ -418,8 +420,11 @@ class Game {
       this._firstTry = true;
 
       // add to heatmap
+      setTimeout(() => this.pluckCurrentNote(), 300);
     } else {
       if (this._firstTry) this._firstTry = false;
+
+      // add to heatmap
     }
     lastPlayedNoteText.text(selectedNote.note);
     this._dispLayer.draw();
@@ -427,8 +432,6 @@ class Game {
     console.log(this._score);
     console.log(this._totalRounds);
     console.log(this._firstTry);
-
-    // add to heatmap
   }
 }
 
