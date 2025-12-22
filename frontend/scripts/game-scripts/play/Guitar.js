@@ -1,24 +1,11 @@
 import Utils from "../Utils.js";
 import locationToNote from "../locationToNote.js";
 
-const preferredNotes = [
-  "A",
-  "A#",
-  "B",
-  "C",
-  "C#",
-  "D",
-  "D#",
-  "E",
-  "F",
-  "F#",
-  "G",
-  "G#",
-];
-const preferredStrings = [1, 2, 3, 4, 5, 6];
+const preferredNotes = JSON.parse(localStorage.getItem("preferredNotes"));
+const preferredStrings = JSON.parse(localStorage.getItem("preferredStrings"));
 
 class Guitar {
-  constructor(dispX, dispY, selectedNotes, selectedStrings) {
+  constructor(dispX, dispY) {
     // constants and variable definition
     const fretboardX = 0;
     const fretboardY = 0;
@@ -31,9 +18,10 @@ class Guitar {
     this._currentNote = null;
     // create list of valid notes
     this._validNotes = [];
-    for (let s = 0; s < numStrings; s++) {
+    for (let s = 0; s < preferredStrings.length; s++) {
       for (let f = 0; f < numFrets; f++) {
-        let tempNote = new Note(f, s);
+        let tempNote = new Note(f, preferredStrings[s] - 1);
+        //console.log(preferredStrings[s] - 1);
         if (
           preferredNotes.includes(
             tempNote.pitch.substring(0, tempNote.pitch.length - 1)
@@ -328,6 +316,8 @@ class Note {
   constructor(fret, string) {
     this._fret = fret;
     this._string = string;
+    // console.log(this._fret);
+    // console.log(this._string);
     this._pitch = locationToNote[string].get(fret);
   }
 
