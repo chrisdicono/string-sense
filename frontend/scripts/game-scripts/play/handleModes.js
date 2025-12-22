@@ -135,12 +135,37 @@ function handleModes(primaryLayer, stage, newState, playConfig) {
       playConfig.playState = "drill";
     });
 
+    const zenDesc = new Konva.Text({
+      x: stage.width() / 2,
+      y: stage.height() - 30,
+      text: "Coming Soon!",
+      fontSize: 20,
+      fontFamily: "Space Mono",
+      fill: "#ddd",
+      opacity: 0,
+      offsetX: 0,
+    });
+    zenDesc.offsetX(zenDesc.width() / 2);
+    const drillDesc = new Konva.Text({
+      x: stage.width() / 2,
+      y: stage.height() - 30,
+      text: "Correctly guess the prompted notes and build your muscle memory!",
+      fontSize: 20,
+      fontFamily: "Space Mono",
+      fill: "#ddd",
+      opacity: 0,
+      offsetX: 0,
+    });
+    drillDesc.offsetX(drillDesc.width() / 2);
+
     // short description over hover (possibly animation later)
     primaryLayer.add(backButton);
     primaryLayer.add(mainText);
     primaryLayer.add(tunerText);
     primaryLayer.add(zenButton);
     primaryLayer.add(drillButton);
+    primaryLayer.add(zenDesc);
+    primaryLayer.add(drillDesc);
     primaryLayer.draw();
 
     zenButton.on("mouseover", () => {
@@ -151,13 +176,18 @@ function handleModes(primaryLayer, stage, newState, playConfig) {
         scaleY: 1.05,
         easing: Konva.Easings.EaseInOut,
       }).play();
-
       new Konva.Tween({
         node: optRect1,
         duration: 0.2,
         scaleX: 1.1,
         scaleY: 1.1,
         fill: "#85b1dacc",
+        easing: Konva.Easings.EaseInOut,
+      }).play();
+      new Konva.Tween({
+        node: zenDesc,
+        duration: 0.2,
+        opacity: 1,
         easing: Konva.Easings.EaseInOut,
       }).play();
     });
@@ -170,13 +200,18 @@ function handleModes(primaryLayer, stage, newState, playConfig) {
         scaleY: 1,
         easing: Konva.Easings.EaseInOut,
       }).play();
-
       new Konva.Tween({
         node: optRect1,
         duration: 0.2,
         scaleX: 1,
         scaleY: 1,
         fill: "#dddddd5a",
+        easing: Konva.Easings.EaseInOut,
+      }).play();
+      new Konva.Tween({
+        node: zenDesc,
+        duration: 0.2,
+        opacity: 0,
         easing: Konva.Easings.EaseInOut,
       }).play();
     });
@@ -189,13 +224,18 @@ function handleModes(primaryLayer, stage, newState, playConfig) {
         scaleY: 1.05,
         easing: Konva.Easings.EaseInOut,
       }).play();
-
       new Konva.Tween({
         node: optRect2,
         duration: 0.2,
         scaleX: 1.1,
         scaleY: 1.1,
         fill: "#85b1dacc",
+        easing: Konva.Easings.EaseInOut,
+      }).play();
+      new Konva.Tween({
+        node: drillDesc,
+        duration: 0.2,
+        opacity: 1,
         easing: Konva.Easings.EaseInOut,
       }).play();
     });
@@ -208,13 +248,18 @@ function handleModes(primaryLayer, stage, newState, playConfig) {
         scaleY: 1,
         easing: Konva.Easings.EaseInOut,
       }).play();
-
       new Konva.Tween({
         node: optRect2,
         duration: 0.2,
         scaleX: 1,
         scaleY: 1,
         fill: "#dddddd5a",
+        easing: Konva.Easings.EaseInOut,
+      }).play();
+      new Konva.Tween({
+        node: drillDesc,
+        duration: 0.2,
+        opacity: 0,
         easing: Konva.Easings.EaseInOut,
       }).play();
     });

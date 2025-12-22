@@ -6,7 +6,6 @@ import Game from "./Game.js";
 // global variables and setup
 let game = null;
 let guitar = null;
-let userPref = {};
 
 function handleDrill(primaryLayer, stage, newState, playConfig) {
   if (!playConfig.initialized) {
