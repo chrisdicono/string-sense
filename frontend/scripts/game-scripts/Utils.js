@@ -5,6 +5,9 @@ import { freqs440 } from "./note-freqs.js";
 Utility functions for the game.
 */
 class Utils {
+  /*
+    Determines the letter and octave of a note from its frequency.
+    */
   static getNoteFromFreq(freq) {
     let closestKey = null;
     let minDiff = Number.MAX_VALUE;

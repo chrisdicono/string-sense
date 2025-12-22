@@ -67,7 +67,7 @@ bStr.set(2, "C#4");
 bStr.set(3, "D4");
 bStr.set(4, "D#4");
 bStr.set(5, "E4");
-bStr.set(6, "G4");
+bStr.set(6, "F4");
 bStr.set(7, "F#4");
 bStr.set(8, "G4");
 bStr.set(9, "G#4");
@@ -90,6 +90,5 @@ highE.set(11, "D#5");
 highE.set(12, "E5");
 
 let locationToNote = [lowE, aStr, dStr, gStr, bStr, highE];
-// locationToNote = locationToNote.reverse();
 
 export default locationToNote;
