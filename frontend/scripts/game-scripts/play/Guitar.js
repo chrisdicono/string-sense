@@ -322,29 +322,6 @@ class Guitar {
   addBestNote(note) {
     this.addNoteToHeatmap(note, this._bestNotes);
   }
-
-  // translates the index of a string to the correct letter name
-  stringIndexToLetter(i) {
-    switch (i) {
-      case 0:
-        return "E";
-      case 1:
-        return "A";
-      case 2:
-        return "D";
-      case 3:
-        return "G";
-      case 4:
-        return "B";
-      case 5:
-        return "e";
-    }
-  }
-
-  // translates the index of a string to the correct number (high to low)
-  stringIndexToNumber(i) {
-    return 6 - i;
-  }
 }
 
 class Note {
