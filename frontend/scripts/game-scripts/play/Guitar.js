@@ -17,7 +17,7 @@ class Guitar {
     this._worstNotes = new Map();
     this._bestNotes = new Map();
     this._strings = [];
-    let fretPositions = [];
+    this._fretPositions = [];
     this._fretNumbers = [];
     this._numbersHidden = true;
     this._notes = [];
@@ -40,7 +40,7 @@ class Guitar {
     // create and add frets
     for (let i = 0; i <= this._numFrets; i++) {
       const position = 2 * this._fretboardWidth * (1 - Math.pow(2, -i / 12));
-      fretPositions.push(position);
+      this._fretPositions.push(position);
       let fretStart = this._fretboardY;
       let fretEnd = this._fretboardY + this._fretboardHeight;
       if (i == 0 || i == 12) {
@@ -83,7 +83,8 @@ class Guitar {
     for (let i = 0; i <= this._numFrets; i++) {
       if (markerNums.includes(i + 1)) {
         let markerX =
-          this._fretboardX + (fretPositions[i] + fretPositions[i + 1]) / 2;
+          this._fretboardX +
+          (this._fretPositions[i] + this._fretPositions[i + 1]) / 2;
         if ((i + 1) % 12 == 0) {
           let m1 = new Konva.Circle({
             x: markerX,
@@ -133,7 +134,8 @@ class Guitar {
       let tempArray = [];
       for (let j = 0; j < this._numFrets; j++) {
         let noteX =
-          this._fretboardX + (fretPositions[j] + fretPositions[j + 1]) / 2;
+          this._fretboardX +
+          (this._fretPositions[j] + this._fretPositions[j + 1]) / 2;
         let tempNote = new Konva.Circle({
           x: noteX,
           y: noteY,
@@ -229,7 +231,8 @@ class Guitar {
     let string = note.string;
     let fret = note.fret;
     let noteX =
-      this._fretboardX + (fretPositions[fret] + fretPositions[fret + 1]) / 2;
+      this._fretboardX +
+      (this._fretPositions[fret] + this._fretPositions[fret + 1]) / 2;
     let noteY = this._fretboardY + string * stringSpacing;
     return [noteX, noteY];
   }
