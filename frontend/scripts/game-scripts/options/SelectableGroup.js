@@ -44,9 +44,9 @@ class SelectableGroup {
     });
   }
 
-  // TODO: returns a list of all selected components
+  // returns a list of all selected components
   allSelected() {
-    // code here
+    return this.selectables.filter((s) => s.selected);
   }
 }
 

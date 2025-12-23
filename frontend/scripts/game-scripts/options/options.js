@@ -6,12 +6,15 @@ import CheckboxGroup from "./CheckboxGroup.js";
 
 // global variables
 let initialized = false;
-const preferredNotes = JSON.parse(localStorage.getItem("preferredNotes"));
-const ps = JSON.parse(localStorage.getItem("preferredStrings"));
-const preferredStrings = ps.map((str) => Utils.stringIndexToLetter(str - 1));
 
 function handleOptions(primaryLayer, stage, newState) {
   if (!initialized) {
+    const preferredNotes = JSON.parse(localStorage.getItem("preferredNotes"));
+    const ps = JSON.parse(localStorage.getItem("preferredStrings"));
+    const preferredStrings = ps.map((str) =>
+      Utils.stringIndexToLetter(str - 1)
+    );
+
     const backButton = new Konva.Text({
       x: 25,
       y: 13,
@@ -107,7 +110,58 @@ function handleOptions(primaryLayer, stage, newState) {
     });
     stringGroup.addList(strings);
 
-    // TODO: implement "Save Settings" Button
+    const saveGroup = new Konva.Group({
+      x: 710,
+      y: 440,
+    });
+    const saveBg = new Konva.Rect({
+      x: 0,
+      y: 0,
+      width: 175,
+      height: 50,
+      fill: "#dddddd5a",
+      cornerRadius: 15,
+      opacity: 1,
+    });
+    const saveText = new Konva.Text({
+      x: saveBg.width() / 2,
+      y: saveBg.height() / 2,
+      text: "Save Settings",
+      fontSize: 20,
+      fontFamily: "Space Mono",
+      fill: "#ddd",
+      offsetX: 0,
+      offsetY: 0,
+      opacity: 1,
+    });
+    saveText.offsetX(saveText.width() / 2);
+    saveText.offsetY(saveText.height() / 2);
+    saveGroup.add(saveBg);
+    saveGroup.add(saveText);
+    saveGroup.on("mouseover", () => {
+      saveBg.fill("#dddddd8a");
+    });
+    saveGroup.on("mouseout", () => {
+      saveBg.fill("#dddddd5a");
+    });
+    saveGroup.on("click", () => {
+      let prefNotesSel = noteGroup.allSelected().map((s) => {
+        return s.text;
+      });
+      let prefStrsSel = stringGroup.allSelected().map((s) => {
+        return Utils.stringLetterToIndex(s.text) + 1;
+      });
+      if (prefNotesSel.length === 0) prefNotesSel = Utils.defaultNotes();
+      if (prefStrsSel.length === 0) prefStrsSel = Utils.defaultStringNumbers();
+      localStorage.setItem("preferredNotes", JSON.stringify(prefNotesSel));
+      localStorage.setItem("preferredStrings", JSON.stringify(prefStrsSel));
+      const pn2 = JSON.parse(localStorage.getItem("preferredNotes"));
+      const ps2 = JSON.parse(localStorage.getItem("preferredStrings"));
+      console.log(pn2);
+      console.log(ps2);
+    });
+
+    primaryLayer.add(saveGroup);
 
     initialized = true;
   }

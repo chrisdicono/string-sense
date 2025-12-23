@@ -8,6 +8,26 @@ class Utils {
   /*
     Translates the index of a string to the correct letter name.
     */
+  static stringLetterToIndex(str) {
+    switch (str) {
+      case "E":
+        return 0;
+      case "A":
+        return 1;
+      case "D":
+        return 2;
+      case "G":
+        return 3;
+      case "B":
+        return 4;
+      case "e":
+        return 5;
+    }
+  }
+
+  /*
+    Translates the index of a string to the correct letter name.
+    */
   static stringIndexToLetter(i) {
     switch (i) {
       case 0:
@@ -30,6 +50,27 @@ class Utils {
     */
   static stringIndexToNumber(i) {
     return 6 - i;
+  }
+
+  /*
+    Returns an array with all possible notes.
+    */
+  static defaultNotes() {
+    return ["A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#"];
+  }
+
+  /*
+    Returns an array with all possible strings (in number form).
+    */
+  static defaultStringNumbers() {
+    return [1, 2, 3, 4, 5, 6];
+  }
+
+  /*
+    Returns an array with all possible strings (in note/letter form).
+    */
+  static defaultStringLetters() {
+    return ["E", "A", "D", "G", "B", "e"];
   }
 
   /*

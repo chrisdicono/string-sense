@@ -1,12 +1,13 @@
 import Utils from "../Utils.js";
 import locationToNote from "../locationToNote.js";
 
-const preferredNotes = JSON.parse(localStorage.getItem("preferredNotes"));
-const preferredStrings = JSON.parse(localStorage.getItem("preferredStrings"));
-
 class Guitar {
   constructor(dispX, dispY) {
     // constants and variable definition
+    const preferredNotes = JSON.parse(localStorage.getItem("preferredNotes"));
+    const preferredStrings = JSON.parse(
+      localStorage.getItem("preferredStrings")
+    );
     const fretboardX = 0;
     const fretboardY = 0;
     const fretboardWidth = 600;

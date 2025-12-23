@@ -1,5 +1,6 @@
 // imports
 import { freqs440 } from "./note-freqs.js";
+import Utils from "./Utils.js";
 import handleMenu from "./menu.js";
 import handlePlay from "./play/play.js";
 import handleOptions from "./options/options.js";
@@ -41,21 +42,8 @@ stage.add(layer2);
 let gameState = "menu";
 
 // User Preferences
-const preferredNotes = [
-  "A",
-  "A#",
-  "B",
-  "C",
-  "C#",
-  "D",
-  "D#",
-  "E",
-  "F",
-  "F#",
-  "G",
-  "G#",
-];
-const preferredStrings = [1, 2, 3, 4, 5, 6];
+const preferredNotes = Utils.defaultNotes();
+const preferredStrings = Utils.defaultStringNumbers();
 localStorage.setItem("preferredNotes", JSON.stringify(preferredNotes));
 localStorage.setItem("preferredStrings", JSON.stringify(preferredStrings));
 
