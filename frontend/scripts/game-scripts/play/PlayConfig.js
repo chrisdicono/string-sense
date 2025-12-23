@@ -21,7 +21,7 @@ class PlayConfig {
         this._WAVE_END,
         this._BOX_HEIGHT / 2,
       ],
-      stroke: "#8b8b8b47",
+      stroke: "#70707070",
       strokeWidth: 2,
     });
     this._waveform.offsetX(this._waveform.width() / 2);
