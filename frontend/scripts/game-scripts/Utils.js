@@ -6,6 +6,33 @@ Utility functions for the game.
 */
 class Utils {
   /*
+    Translates the index of a string to the correct letter name.
+    */
+  static stringIndexToLetter(i) {
+    switch (i) {
+      case 0:
+        return "E";
+      case 1:
+        return "A";
+      case 2:
+        return "D";
+      case 3:
+        return "G";
+      case 4:
+        return "B";
+      case 5:
+        return "e";
+    }
+  }
+
+  /*
+    Translates the index of a string to the correct number (high to low).
+    */
+  static stringIndexToNumber(i) {
+    return 6 - i;
+  }
+
+  /*
     Determines the letter and octave of a note from its frequency.
     */
   static getNoteFromFreq(freq) {

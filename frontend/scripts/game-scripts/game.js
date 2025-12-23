@@ -2,7 +2,7 @@
 import { freqs440 } from "./note-freqs.js";
 import handleMenu from "./menu.js";
 import handlePlay from "./play/play.js";
-import handleOptions from "./options.js";
+import handleOptions from "./options/options.js";
 
 // initialize Konva Stage
 const gameContainer = document.querySelector(".game-container");
