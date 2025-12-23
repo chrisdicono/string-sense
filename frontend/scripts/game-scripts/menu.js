@@ -16,35 +16,39 @@ async function handleMenu(primaryLayer, stage, newState) {
   // initialize menu only once
   if (titleScreen) {
     const welcomeText1 = new Konva.Text({
-      x: 0,
+      x: stage.width() / 2,
       y: stage.height() / 2 - 75,
-      width: stage.width(),
-      align: "center",
       text: "welcome to",
       fontSize: 30,
       fontFamily: "Space Mono",
       fill: "#ddd",
+      offsetX: 0,
     });
+    welcomeText1.offsetX(welcomeText1.width() / 2);
+
     const titleText = new Konva.Text({
-      x: 0,
+      x: stage.width() / 2,
       y: stage.height() / 2 - 40,
-      width: stage.width(),
-      align: "center",
       text: "StringSense",
       fontSize: 70,
       fontFamily: "DynaPuff",
       fill: "#ddd",
-    });
-    const welcomeText2 = new Konva.Text({
-      x: 0,
-      y: stage.height() / 2 + 35,
-      width: stage.width(),
+      offsetX: 0,
       align: "center",
+      alignVertical: "middle",
+    });
+    titleText.offsetX(titleText.width() / 2);
+
+    const welcomeText2 = new Konva.Text({
+      x: stage.width() / 2,
+      y: stage.height() / 2 + 35,
       text: "press space to continue",
       fontSize: 30,
       fontFamily: "Space Mono",
       fill: "#ddd",
+      offsetX: 0,
     });
+    welcomeText2.offsetX(welcomeText2.width() / 2);
 
     primaryLayer.add(welcomeText1);
     primaryLayer.add(titleText);
