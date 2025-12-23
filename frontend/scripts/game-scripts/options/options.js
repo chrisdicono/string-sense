@@ -3,6 +3,7 @@ import Utils from "../Utils.js";
 import Selectable from "./Selectable.js";
 import Checkbox from "./Checkbox.js";
 import CheckboxGroup from "./CheckboxGroup.js";
+import Guitar from "../play/Guitar.js";
 
 // global variables
 let initialized = false;
@@ -40,6 +41,10 @@ function handleOptions(primaryLayer, stage, newState) {
 
     primaryLayer.add(backButton);
     primaryLayer.draw();
+
+    const guitar = new Guitar(275, 25);
+    primaryLayer.add(guitar.fretboardDisplay);
+    guitar.displayValidNotes();
 
     const noteText = new Konva.Text({
       x: 50,
@@ -155,10 +160,8 @@ function handleOptions(primaryLayer, stage, newState) {
       if (prefStrsSel.length === 0) prefStrsSel = Utils.defaultStringNumbers();
       localStorage.setItem("preferredNotes", JSON.stringify(prefNotesSel));
       localStorage.setItem("preferredStrings", JSON.stringify(prefStrsSel));
-      const pn2 = JSON.parse(localStorage.getItem("preferredNotes"));
-      const ps2 = JSON.parse(localStorage.getItem("preferredStrings"));
-      console.log(pn2);
-      console.log(ps2);
+
+      guitar.displayValidNotes();
     });
 
     primaryLayer.add(saveGroup);

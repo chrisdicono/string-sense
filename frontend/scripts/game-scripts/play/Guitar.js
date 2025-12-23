@@ -4,34 +4,16 @@ import locationToNote from "../locationToNote.js";
 class Guitar {
   constructor(dispX, dispY) {
     // constants and variable definition
-    const preferredNotes = JSON.parse(localStorage.getItem("preferredNotes"));
-    const preferredStrings = JSON.parse(
-      localStorage.getItem("preferredStrings")
-    );
-    const fretboardX = 0;
-    const fretboardY = 0;
-    const fretboardWidth = 600;
-    const fretboardHeight = 240;
-    const numFrets = 12;
-    const numStrings = 6;
+    this._fretboardX = 0;
+    this._fretboardY = 0;
+    this._fretboardWidth = 600;
+    this._fretboardHeight = 240;
+    this._numFrets = 12;
+    this._numStrings = 6;
     const cornerRadius = 10;
-    const stringSpacing = fretboardHeight / (numStrings - 1);
+    const stringSpacing = this._fretboardHeight / (this._numStrings - 1);
     this._currentNote = null;
-    // create list of valid notes
-    this._validNotes = [];
-    for (let s = 0; s < preferredStrings.length; s++) {
-      for (let f = 0; f < numFrets; f++) {
-        let tempNote = new Note(f, preferredStrings[s] - 1);
-        //console.log(preferredStrings[s] - 1);
-        if (
-          preferredNotes.includes(
-            tempNote.pitch.substring(0, tempNote.pitch.length - 1)
-          )
-        ) {
-          this._validNotes.push(tempNote);
-        }
-      }
-    }
+    this.initValidNotes();
     this._worstNotes = new Map();
     this._bestNotes = new Map();
     this._strings = [];
@@ -47,8 +29,8 @@ class Guitar {
     this.fretboardBackground = new Konva.Rect({
       x: 0,
       y: 0,
-      width: fretboardWidth,
-      height: fretboardHeight,
+      width: this._fretboardWidth,
+      height: this._fretboardHeight,
       fill: "#dddddd50",
       stroke: "#ddd",
       strokeWidth: 4,
@@ -56,20 +38,20 @@ class Guitar {
     });
     this._fretboardDisplay.add(this.fretboardBackground);
     // create and add frets
-    for (let i = 0; i <= numFrets; i++) {
-      const position = 2 * fretboardWidth * (1 - Math.pow(2, -i / 12));
+    for (let i = 0; i <= this._numFrets; i++) {
+      const position = 2 * this._fretboardWidth * (1 - Math.pow(2, -i / 12));
       fretPositions.push(position);
-      let fretStart = fretboardY;
-      let fretEnd = fretboardY + fretboardHeight;
+      let fretStart = this._fretboardY;
+      let fretEnd = this._fretboardY + this._fretboardHeight;
       if (i == 0 || i == 12) {
         fretStart += 10;
         fretEnd -= 10;
       }
       const fret = new Konva.Line({
         points: [
-          fretboardX + position,
+          this._fretboardX + position,
           fretStart,
-          fretboardX + position,
+          this._fretboardX + position,
           fretEnd,
         ],
         stroke: "#ddd",
@@ -79,9 +61,10 @@ class Guitar {
     }
     // create and add strings
     for (let i = 0; i <= 5; i++) {
-      let stringY = fretboardY + fretboardHeight - i * stringSpacing;
-      let stringStart = fretboardX;
-      let stringEnd = fretboardX + fretboardWidth;
+      let stringY =
+        this._fretboardY + this._fretboardHeight - i * stringSpacing;
+      let stringStart = this._fretboardX;
+      let stringEnd = this._fretboardX + this._fretboardWidth;
       if (i == 0 || i == 5) {
         stringStart += cornerRadius;
         stringEnd -= cornerRadius;
@@ -97,20 +80,20 @@ class Guitar {
     // create and add fret markers and numbers
     let markerNums = [3, 5, 7, 9, 12, 15, 17, 19, 21, 24];
     let markerRadius = 7;
-    for (let i = 0; i <= numFrets; i++) {
+    for (let i = 0; i <= this._numFrets; i++) {
       if (markerNums.includes(i + 1)) {
         let markerX =
-          fretboardX + (fretPositions[i] + fretPositions[i + 1]) / 2;
+          this._fretboardX + (fretPositions[i] + fretPositions[i + 1]) / 2;
         if ((i + 1) % 12 == 0) {
           let m1 = new Konva.Circle({
             x: markerX,
-            y: fretboardY + stringSpacing * 1.5,
+            y: this._fretboardY + stringSpacing * 1.5,
             radius: markerRadius,
             fill: "#ddddddb0",
           });
           let m2 = new Konva.Circle({
             x: markerX,
-            y: fretboardY + stringSpacing * 3.5,
+            y: this._fretboardY + stringSpacing * 3.5,
             radius: markerRadius,
             fill: "#ddddddb0",
           });
@@ -119,7 +102,7 @@ class Guitar {
         } else {
           let m1 = new Konva.Circle({
             x: markerX,
-            y: fretboardY + stringSpacing * 2.5,
+            y: this._fretboardY + stringSpacing * 2.5,
             radius: markerRadius,
             fill: "#ddddddb0",
           });
@@ -127,7 +110,7 @@ class Guitar {
         }
         let text = new Konva.Text({
           x: markerX,
-          y: fretboardY + fretboardHeight + 10,
+          y: this._fretboardY + this._fretboardHeight + 10,
           text: i + 1,
           fontSize: 15,
           fontFamily: "Space Mono",
@@ -146,15 +129,16 @@ class Guitar {
     // add notes, opacity 0 by default
     let noteRadius = 8;
     for (let i = 0; i < 6; i++) {
-      let noteY = fretboardY + fretboardHeight - i * stringSpacing;
+      let noteY = this._fretboardY + this._fretboardHeight - i * stringSpacing;
       let tempArray = [];
-      for (let j = 0; j < numFrets; j++) {
-        let noteX = fretboardX + (fretPositions[j] + fretPositions[j + 1]) / 2;
+      for (let j = 0; j < this._numFrets; j++) {
+        let noteX =
+          this._fretboardX + (fretPositions[j] + fretPositions[j + 1]) / 2;
         let tempNote = new Konva.Circle({
           x: noteX,
           y: noteY,
           radius: noteRadius + Math.abs(12 - j) * 0.2,
-          fill: "#444",
+          fill: "#707070ff",
           opacity: 0,
         });
         tempArray.push(tempNote);
@@ -184,6 +168,22 @@ class Guitar {
 
   get notes() {
     return this._notes;
+  }
+
+  get fretboardWidth() {
+    return this._fretboardWidth;
+  }
+
+  get fretboardHeight() {
+    return this._fretboardHeight;
+  }
+
+  get numFrets() {
+    return this.numFrets;
+  }
+
+  get numStrings() {
+    return this.numStrings;
   }
 
   // returns the current note's pitch
@@ -229,9 +229,64 @@ class Guitar {
     let string = note.string;
     let fret = note.fret;
     let noteX =
-      fretboardX + (fretPositions[fret] + fretPositions[fret + 1]) / 2;
-    let noteY = fretboardY + string * stringSpacing;
+      this._fretboardX + (fretPositions[fret] + fretPositions[fret + 1]) / 2;
+    let noteY = this._fretboardY + string * stringSpacing;
     return [noteX, noteY];
+  }
+
+  // selects a given note indefinitely
+  selectNote(string, fret) {
+    if (fret > 0) {
+      let note = this.notes[string][fret - 1];
+      note.opacity(1);
+    } else {
+      let tempString = this._strings[string];
+      tempString.stroke("#707070ff");
+    }
+  }
+
+  // deselects a given note indefinitely
+  deselectNote(string, fret) {
+    if (fret > 0) {
+      let note = this.notes[string][fret - 1];
+      note.opacity(0);
+    } else {
+      let tempString = this._strings[string];
+      tempString.stroke("#ddd");
+    }
+  }
+
+  // displays all valid notes indefinitely
+  displayValidNotes() {
+    this.validNotes.forEach((n) => {
+      this.deselectNote(n.string, n.fret);
+    });
+    this.initValidNotes();
+    this.validNotes.forEach((n) => {
+      this.selectNote(n.string, n.fret);
+    });
+  }
+
+  // initializes the array of valid notes
+  initValidNotes() {
+    this._validNotes = [];
+    this._preferredNotes = JSON.parse(localStorage.getItem("preferredNotes"));
+    this._preferredStrings = JSON.parse(
+      localStorage.getItem("preferredStrings")
+    );
+    for (let s = 0; s < this._preferredStrings.length; s++) {
+      for (let f = 0; f <= this._numFrets; f++) {
+        let tempNote = new Note(f, this._preferredStrings[s] - 1);
+        //console.log(preferredStrings[s] - 1);
+        if (
+          this._preferredNotes.includes(
+            tempNote.pitch.substring(0, tempNote.pitch.length - 1)
+          )
+        ) {
+          this._validNotes.push(tempNote);
+        }
+      }
+    }
   }
 
   // animates and briefly displays a note that is either correct or incorrect
