@@ -1,0 +1,23 @@
+{
+  "name": "stringsense",
+  "version": "1.0.0",
+  "description": "<div>\r <h1 style=\"margin-bottom:0;padding-bottom:0\">🎸 Introducing: \r StringSense!</h1>\r <h3 style=\"margin-top:0\">An interactive memory game for \r guitarists</h3>\r </div>",
+  "homepage": "https://github.com/chrisdicono/string-sense#readme",
+  "bugs": {
+    "url": "https://github.com/chrisdicono/string-sense/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chrisdicono/string-sense.git"
+  },
+  "license": "ISC",
+  "author": "chrisdicono",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
